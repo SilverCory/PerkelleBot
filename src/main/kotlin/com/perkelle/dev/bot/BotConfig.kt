@@ -17,4 +17,7 @@ class BotConfig: JSON() {
     fun getAdminIds() = config.getGeneric("admin-ids", JSONArray()).toList().map { it.toString().toLong() }
 
     fun getSupportGuild() = config.getGeneric("support-guild", "")
+    fun getInviteLink() = config.getGeneric("invite-link", "https://bot.perklle.com/invite")
+
+    inline fun<reified T>  getValue(key: String, default: T) = config.getGeneric(key, default)
 }

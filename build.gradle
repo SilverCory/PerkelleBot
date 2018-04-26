@@ -17,6 +17,9 @@ apply plugin: 'kotlin'
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url  "https://dl.bintray.com/kotlin/exposed"
+    }
 }
 
 dependencies {
@@ -31,6 +34,8 @@ dependencies {
     compile "org.slf4j:slf4j-log4j12:+"
     compile "com.zaxxer:HikariCP:3.0.0"
     compile "com.google.guava:guava:+"
+    compile "mysql:mysql-connector-java:+"
+    compile "org.jetbrains.exposed:exposed:+"
 }
 
 compileKotlin {

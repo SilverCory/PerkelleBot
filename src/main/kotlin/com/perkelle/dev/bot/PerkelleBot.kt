@@ -1,8 +1,10 @@
 package com.perkelle.dev.bot
 
 import com.perkelle.dev.bot.command.ICommand
+import com.perkelle.dev.bot.command.datastores.SQLBackend
 import com.perkelle.dev.bot.listeners.CommandListener
 import com.perkelle.dev.bot.listeners.ReactListener
+import com.perkelle.dev.bot.listeners.ShardStatusListener
 import com.perkelle.dev.bot.utils.getCommands
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager
@@ -37,6 +39,7 @@ class PerkelleBot: Runnable {
 
     lateinit var config: BotConfig
     lateinit var shardManager: ShardManager
+    lateinit var pictureURL: String
 
     override fun run() {
         println("Loading configs...")
@@ -45,6 +48,15 @@ class PerkelleBot: Runnable {
             config.load()
         } catch(ex: Exception) {
             println("FATAL: The bot config was not loaded. Does it exist?")
+            ex.printStackTrace()
+            System.exit(-1)
+        }
+
+        println("Initiating datastores")
+        try {
+            SQLBackend().setup()
+        } catch(ex: Exception) {
+            println("Couldn't connect. Are the login details correct?")
             ex.printStackTrace()
             System.exit(-1)
         }
@@ -59,9 +71,12 @@ class PerkelleBot: Runnable {
                     .setShardsTotal(config.getTotalShards())
                     .setShards(config.getLowestShard(), config.getLowestShard() + config.getTotalShards() - 1)
 
-            builder.addEventListeners(CommandListener(), ReactListener())
+            builder.addEventListeners(CommandListener(), ReactListener(), ShardStatusListener())
 
             shardManager = builder.build()
+
+            //We want to block for this
+            pictureURL = shardManager.applicationInfo.complete().iconUrl
 
             getCommands("com.perkelle.dev.bot.command.impl").forEach(ICommand::register)
         } catch(ex: Exception) {

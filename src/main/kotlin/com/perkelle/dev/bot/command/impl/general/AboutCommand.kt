@@ -1,22 +1,23 @@
-package com.perkelle.dev.bot.command.impl
+package com.perkelle.dev.bot.command.impl.general
 
-import com.perkelle.dev.bot.Constants
 import com.perkelle.dev.bot.command.CommandBuilder
+import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
-import com.perkelle.dev.bot.getConfig
+import com.perkelle.dev.bot.command.PermissionCategory
 import com.perkelle.dev.bot.utils.sendEmbed
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 
 class AboutCommand: ICommand {
 
     override fun register() {
         CommandBuilder()
-                .name("about")
-                .description("Gives you information about the bot")
-                .executor {
+                .setName("about")
+                .setDescription("Gives you information about the bot")
+                .setCategory(CommandCategory.GENERAL)
+                .setPermission(PermissionCategory.GENERAL)
+                .setExecutor {
                     channel.sendEmbed("About", """
                         Prefix: `p!`
+                        Help: `p!help`
                         Invite: `p!invite`
                         Support: `p!support`
                         Github: `https://github.com/Dot-Rar/PerkelleBot`
