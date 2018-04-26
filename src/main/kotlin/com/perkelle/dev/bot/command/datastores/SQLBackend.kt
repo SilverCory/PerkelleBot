@@ -52,6 +52,11 @@ class SQLBackend {
         val admin = DefaultPermissions.bool("admin")
     }
 
+    object Volumes: Table() {
+        val guild = long("guild").uniqueIndex().primaryKey()
+        val volume = integer("volume")
+    }
+
     object DisabledChannels: Table() {
         val channel = long("channel").uniqueIndex().primaryKey()
     }
@@ -81,6 +86,7 @@ class SQLBackend {
                 SchemaUtils.create(DefaultPermissions)
                 SchemaUtils.create(RolePermissions)
                 SchemaUtils.create(DisabledChannels)
+                SchemaUtils.create(Volumes)
             }
         }
     }
@@ -184,6 +190,27 @@ class SQLBackend {
                 return@transaction RolePermissions.select {
                     RolePermissions.role eq role.idLong
                 }.map { PermissionList(it[RolePermissions.general], it[RolePermissions.music], it[RolePermissions.musicAdmin], it[RolePermissions.moderator], it[RolePermissions.admin]) }.firstOrNull()
+            }
+        }.onComplete(callback)
+    }
+
+    fun setVolume(guildId: Long, volume: Int) {
+        launch {
+            transaction {
+                Volumes.upsert(listOf(Volumes.volume)) {
+                    it[guild] = guildId
+                    it[this.volume] = volume
+                }
+            }
+        }
+    }
+
+    fun getVolume(guildId: Long, callback: (Int) -> Unit) {
+        async {
+            return@async transaction {
+                return@transaction Volumes.select {
+                    Volumes.guild eq guildId
+                }.map { it[Volumes.volume] }.firstOrNull() ?: 100
             }
         }.onComplete(callback)
     }

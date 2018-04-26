@@ -7,18 +7,20 @@ import com.perkelle.dev.bot.command.PermissionCategory
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.sendEmbed
 
-class SkipCommand: ICommand {
+class LoopCommand: ICommand {
 
     override fun register() {
         CommandBuilder()
-                .setName("skip")
-                .setDescription("Skips the current song")
+                .setName("loop")
+                .setDescription("Enabled queue looping")
+                .setAliases("repeat")
                 .setCategory(CommandCategory.MUSIC)
                 .setPermission(PermissionCategory.MUSIC_ADMIN)
-                .setAliases("s")
                 .setExecutor {
-                    guild.getWrapper().musicManager.player.stopTrack()
-                    channel.sendEmbed("Music", "${sender.asMention} skipped the song")
+                    guild.getWrapper().musicManager.isLooping = !guild.getWrapper().musicManager.isLooping
+
+                    if(guild.getWrapper().musicManager.isLooping) channel.sendEmbed("Music", "Enabled queue looping")
+                    else channel.sendEmbed("Music", "Disabled queue looping")
                 }
     }
 }
