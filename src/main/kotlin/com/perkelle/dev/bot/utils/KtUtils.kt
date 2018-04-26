@@ -8,6 +8,7 @@ import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageChannel
+import java.util.concurrent.TimeUnit
 
 fun MessageChannel.sendEmbed(title: String, message: String, color: Int = Colors.GREEN, inline: Boolean = false, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
     sendMessage(EmbedBuilder()
@@ -62,3 +63,8 @@ fun boolValue(str: String): Boolean {
         else -> throw InvalidArgumentException(arrayOf(str))
     }
 }
+
+fun Long.formatMillis() = String.format("%d min, %d sec",
+        TimeUnit.MILLISECONDS.toMinutes(this),
+        TimeUnit.MILLISECONDS.toSeconds(this) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(this)))

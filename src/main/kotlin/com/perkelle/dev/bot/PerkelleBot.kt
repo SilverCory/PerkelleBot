@@ -6,6 +6,7 @@ import com.perkelle.dev.bot.listeners.CommandListener
 import com.perkelle.dev.bot.listeners.ReactListener
 import com.perkelle.dev.bot.listeners.ShardStatusListener
 import com.perkelle.dev.bot.utils.getCommands
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
@@ -40,6 +41,7 @@ class PerkelleBot: Runnable {
     lateinit var config: BotConfig
     lateinit var shardManager: ShardManager
     lateinit var pictureURL: String
+    lateinit var playerManager: AudioPlayerManager
 
     override fun run() {
         println("Loading configs...")
@@ -57,6 +59,33 @@ class PerkelleBot: Runnable {
             SQLBackend().setup()
         } catch(ex: Exception) {
             println("Couldn't connect. Are the login details correct?")
+            ex.printStackTrace()
+            System.exit(-1)
+        }
+
+        println("Starting audio module...")
+        try {
+            playerManager = DefaultAudioPlayerManager()
+
+            //Register sources
+            setOf<AudioSourceManager>(
+                    lazy {
+                        val source = YoutubeAudioSourceManager(true)
+                        source.setPlaylistPageCount(2)
+                        source
+                    }.value,
+                    SoundCloudAudioSourceManager(),
+                    BandcampAudioSourceManager(),
+                    VimeoAudioSourceManager(),
+                    TwitchStreamAudioSourceManager(),
+                    BeamAudioSourceManager(),
+                    HttpAudioSourceManager()
+            ).forEach(playerManager::registerSourceManager)
+
+            AudioSourceManagers.registerLocalSource(playerManager)
+            AudioSourceManagers.registerRemoteSources(playerManager)
+        } catch(ex: Exception) {
+            println("FATAL: The audio module could not be loaded. Are the natives installed?")
             ex.printStackTrace()
             System.exit(-1)
         }
@@ -81,33 +110,6 @@ class PerkelleBot: Runnable {
             getCommands("com.perkelle.dev.bot.command.impl").forEach(ICommand::register)
         } catch(ex: Exception) {
             println("FATAL: The bot did not load correctly. Is the token correct?")
-            ex.printStackTrace()
-            System.exit(-1)
-        }
-
-        println("Starting audio module...")
-        try {
-            val playerManager = DefaultAudioPlayerManager()
-
-            //Register sources
-            setOf<AudioSourceManager>(
-                    lazy {
-                        val source = YoutubeAudioSourceManager(true)
-                        source.setPlaylistPageCount(6 )
-                        source
-                    }.value,
-                    SoundCloudAudioSourceManager(),
-                    BandcampAudioSourceManager(),
-                    VimeoAudioSourceManager(),
-                    TwitchStreamAudioSourceManager(),
-                    BeamAudioSourceManager(),
-                    HttpAudioSourceManager()
-            ).forEach(playerManager::registerSourceManager)
-
-            AudioSourceManagers.registerLocalSource(playerManager)
-            AudioSourceManagers.registerRemoteSources(playerManager)
-        } catch(ex: Exception) {
-            println("FATAL: The audio module could not be loaded. Are the natives installed?")
             ex.printStackTrace()
             System.exit(-1)
         }
