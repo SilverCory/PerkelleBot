@@ -37,3 +37,7 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
+
+general:
+  artifacts:
+    "build/libs/PerkelleBot-1.0-SNAPSHOT.jar"
