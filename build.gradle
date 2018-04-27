@@ -50,3 +50,13 @@ kotlin {
         coroutines 'enable'
     }
 }
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.perkelle.dev.bot.PerkelleBotKt"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
