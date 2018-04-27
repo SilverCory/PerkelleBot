@@ -40,4 +40,4 @@ jobs:
 
 general:
   artifacts:
-    "~/repo/build/libs/PerkelleBot-1.0-SNAPSHOT.jar"
+      - "~/repo/build/libs/PerkelleBot-1.0-SNAPSHOT.jar"
