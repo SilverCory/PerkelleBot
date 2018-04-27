@@ -3,6 +3,7 @@ package com.perkelle.dev.bot.command.impl.music
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.listeners.addReactCallback
+import com.perkelle.dev.bot.listeners.removeCallback
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.music.AudioTrackWrapper
 import com.perkelle.dev.bot.utils.Colors
@@ -72,6 +73,7 @@ class PlayCommand: ICommand {
                                 if (tracks.size >= 3) msg.addReaction("\u0033\u20E3").queue()
                                 if (tracks.size >= 4) msg.addReaction("\u0034\u20E3").queue()
                                 if (tracks.size >= 5) msg.addReaction("\u0035\u20E3").queue()
+                                msg.addReaction("\uD83C\uDDE8").queue()
                             } catch(_: ErrorResponseException) {} //Thrown if the user reacts before all options are displayed (quite a lot of the time)
 
                             addReactCallback(msg.idLong) {
@@ -83,6 +85,11 @@ class PlayCommand: ICommand {
                                     "3⃣" -> tracks[2]
                                     "4⃣" -> tracks[3]
                                     "5⃣" -> tracks[4]
+                                    "\uD83C\uDDE8" -> {
+                                        removeCallback(msg.idLong)
+                                        msg.delete().queue()
+                                        null
+                                    }
                                     else -> null
                                 } ?: return@addReactCallback
 
