@@ -3,7 +3,7 @@ package com.perkelle.dev.bot.command
 import net.dv8tion.jda.core.entities.*
 import java.util.*
 
-data class CommandContext(val user: User, val sender: Member, val guild: Guild, val channel: MessageChannel, val message: Message, val args: Array<String>) {
+data class CommandContext(val user: User, val sender: Member, val guild: Guild, val channel: MessageChannel, val message: Message, val args: Array<String>, val root: String) {
 
     override fun equals(other: Any?): Boolean {
         if(this === other) return true

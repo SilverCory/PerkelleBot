@@ -88,6 +88,6 @@ class CommandListener: ListenerAdapter(), EventListener {
             return
         }
 
-        subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs))
+        subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs, root))
     }
 }

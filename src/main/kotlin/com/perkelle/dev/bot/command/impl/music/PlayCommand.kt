@@ -22,7 +22,7 @@ class PlayCommand: ICommand {
         CommandBuilder()
                 .setName("play")
                 .setDescription("Play a song from a URL or YouTube")
-                .setAliases("p")
+                .setAliases("p", "sc", "soundcloud")
                 .setExecutor {
                     if(args.isEmpty()) {
                         channel.sendEmbed("Music", "You need to specify a search term or URL")
@@ -44,7 +44,9 @@ class PlayCommand: ICommand {
                         else {
                             when {
                                 args[0].matches(youtubePattern) -> RequestType.YOUTUBE_URL
+                                args[0].matches(soundcloudPattern) -> RequestType.SOUNDCLOUD_URL
                                 args[0].matches(urlPattern) -> RequestType.HTTP_URL
+                                root.equals("sc", true) || root.equals("soundcloud", true) -> RequestType.SOUNDCLOUD_SEARCH
                                 else -> RequestType.YOUTUBE_SEARCH
                             }
                         }
@@ -52,6 +54,7 @@ class PlayCommand: ICommand {
 
                     var request = args.joinToString(" ")
                     if(type == RequestType.YOUTUBE_SEARCH) request = "ytsearch: $request"
+                    else if(type == RequestType.SOUNDCLOUD_SEARCH) request = "scsearch: $request"
 
                     val loadResult = guild.getWrapper().musicManager.loadTracks(request, 5)
                     val tracks = loadResult.first
@@ -105,6 +108,8 @@ class PlayCommand: ICommand {
     enum class RequestType {
         YOUTUBE_URL,
         YOUTUBE_SEARCH,
+        SOUNDCLOUD_URL,
+        SOUNDCLOUD_SEARCH,
         HTTP_URL
     }
 }
