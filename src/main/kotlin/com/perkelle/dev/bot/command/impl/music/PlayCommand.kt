@@ -9,6 +9,7 @@ import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.formatMillis
 import com.perkelle.dev.bot.utils.sendEmbed
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.exceptions.ErrorResponseException
 
 class PlayCommand: ICommand {
 
@@ -51,38 +52,46 @@ class PlayCommand: ICommand {
                     var request = args.joinToString(" ")
                     if(type == RequestType.YOUTUBE_SEARCH) request = "ytsearch: $request"
 
-                    val tracks = guild.getWrapper().musicManager.loadTracks(request, 5)
+                    val loadResult = guild.getWrapper().musicManager.loadTracks(request, 5)
+                    val tracks = loadResult.first
 
                     if(tracks.isEmpty()) {
                         channel.sendEmbed("Music", "Couldn't find a track. Perhaps the stream is offline?", Colors.RED)
                         return@setExecutor
                     }
 
-                    channel.sendEmbed("Music", tracks.withIndex().joinToString("\n") { (index, track) -> "`${index + 1}` ${track.info.title} - ${track.info.author} `${track.duration.formatMillis()}`" }) { msg ->
-                        msg.addReaction("\u0031\u20E3").queue()
-                        if(tracks.size >= 2) msg.addReaction("\u0032\u20E3").queue()
-                        if(tracks.size >= 3) msg.addReaction("\u0033\u20E3").queue()
-                        if(tracks.size >= 4) msg.addReaction("\u0034\u20E3").queue()
-                        if(tracks.size >= 5) msg.addReaction("\u0035\u20E3").queue()
+                    if(loadResult.second) {
+                        tracks.forEach { guild.getWrapper().musicManager.queue(AudioTrackWrapper(it, channel, sender), true) }
+                        channel.sendEmbed("Music", "Added all songs to the queue")
+                    }
+                    else {
+                        channel.sendEmbed("Music", tracks.withIndex().joinToString("\n") { (index, track) -> "`${index + 1}` ${track.info.title} - ${track.info.author} `${track.duration.formatMillis()}`" }) { msg ->
+                            msg.addReaction("\u0031\u20E3").queue()
+                            try {
+                                if (tracks.size >= 2) msg.addReaction("\u0032\u20E3").queue()
+                                if (tracks.size >= 3) msg.addReaction("\u0033\u20E3").queue()
+                                if (tracks.size >= 4) msg.addReaction("\u0034\u20E3").queue()
+                                if (tracks.size >= 5) msg.addReaction("\u0035\u20E3").queue()
+                            } catch(_: ErrorResponseException) {} //Thrown if the user reacts before all options are displayed (quite a lot of the time)
 
-                        addReactCallback(msg.idLong) {
-                            if(it.member != sender) return@addReactCallback
+                            addReactCallback(msg.idLong) {
+                                if (it.member != sender) return@addReactCallback
 
-                            val track = when(it.emote.name) {
-                                "1⃣" -> tracks[0]
-                                "2⃣" -> tracks[1]
-                                "3⃣" -> tracks[2]
-                                "4⃣" -> tracks[3]
-                                "5⃣" -> tracks[4]
-                                else -> null
-                            } ?: return@addReactCallback
+                                val track = when (it.emote.name) {
+                                    "1⃣" -> tracks[0]
+                                    "2⃣" -> tracks[1]
+                                    "3⃣" -> tracks[2]
+                                    "4⃣" -> tracks[3]
+                                    "5⃣" -> tracks[4]
+                                    else -> null
+                                } ?: return@addReactCallback
 
-                            msg.delete().queue()
+                                msg.delete().queue()
 
-                            guild.getWrapper().musicManager.queue(AudioTrackWrapper(track, channel, sender))
+                                guild.getWrapper().musicManager.queue(AudioTrackWrapper(track, channel, sender))
+                            }
                         }
                     }
-                    //guild.getWrapper().musicManager.queue(AudioTrackWrapper(null, channel, sender))
                 }
     }
 

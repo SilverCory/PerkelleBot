@@ -9,6 +9,12 @@ import net.dv8tion.jda.core.entities.Role
 
 class GuildWrapper(id: Long, shard: JDA) {
 
+    var prefix: String? = null
+    lateinit var defaultPermissions: PermissionList
+    val rolePermissions = mutableMapOf<Role, PermissionList>()
+    val disabledChannels = mutableListOf<Long>()
+    val musicManager = GuildMusicManager(PerkelleBot.instance.playerManager.createPlayer(), id, shard)
+
     init {
         val guild = shard.getGuildById(id)
 
@@ -32,10 +38,4 @@ class GuildWrapper(id: Long, shard: JDA) {
             }
         }
     }
-
-    var prefix: String? = null
-    lateinit var defaultPermissions: PermissionList
-    val rolePermissions = mutableMapOf<Role, PermissionList>()
-    val disabledChannels = mutableListOf<Long>()
-    val musicManager = GuildMusicManager(PerkelleBot.instance.playerManager.createPlayer(), id, shard)
 }

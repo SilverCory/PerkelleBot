@@ -5,6 +5,7 @@ import com.sun.javaws.exceptions.InvalidArgumentException
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageChannel
@@ -45,6 +46,14 @@ object Colors {
 }
 
 fun<T> Deferred<T>.onComplete(block: (T) -> Unit) = invokeOnCompletion { block(getCompleted()) }
+fun<T> Deferred<T?>.onCompleteOrNull(block: (T?) -> Unit) {
+    invokeOnCompletion {
+        block(this.getCompleted())
+    }
+    runBlocking {
+        this@onCompleteOrNull.join()
+    }
+}
 
 fun<T> MutableList<T>.add(vararg elements: T) = elements.forEach { add(it) }
 

@@ -14,7 +14,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
-import java.util.concurrent.LinkedBlockingQueue
+import net.dv8tion.jda.core.entities.Member
 
 class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: JDA): AudioEventAdapter() {
 
@@ -29,18 +29,22 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
         }
     }
 
-    val queue = LinkedBlockingQueue<AudioTrackWrapper>()
+    val queue = mutableListOf<AudioTrackWrapper>()
     var isLooping = false
 
-    fun queue(audioTrackWrapper: AudioTrackWrapper) {
+    val voteSkips = mutableListOf<Member>()
+
+    fun queue(audioTrackWrapper: AudioTrackWrapper, silent: Boolean = false) {
         queue.add(audioTrackWrapper)
 
         if(queue.size == 1) next()
-        else audioTrackWrapper.channel.sendEmbed("Music", "Queued **${audioTrackWrapper.track.info.title}** `${audioTrackWrapper.track.duration.formatMillis()}`")
+        else if(!silent) audioTrackWrapper.channel.sendEmbed("Music", "Queued **${audioTrackWrapper.track.info.title}** `${audioTrackWrapper.track.duration.formatMillis()}`")
     }
 
-    fun loadTracks(query: String, amount: Int = 5): List<AudioTrack> {
+    //Tracks -> Is YouTube playlist
+    fun loadTracks(query: String, amount: Int = 5): Pair<List<AudioTrack>, Boolean> {
         val tracks = mutableListOf<AudioTrack>()
+        var isYoutubePlaylist = false
 
         //TODO: Make async
         PerkelleBot.instance.playerManager.loadItem(query, object: AudioLoadResultHandler {
@@ -53,19 +57,26 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
             override fun noMatches() {}
 
             override fun playlistLoaded(playlist: AudioPlaylist) {
-                playlist.tracks.withIndex().forEach {  (index, track) ->
-                    if(index < amount) tracks.add(track)
+                if(playlist.isSearchResult) {
+                    for((index, track) in playlist.tracks.withIndex()) {
+                        if (index < amount) tracks.add(track)
+                        else break
+                    }
+                }
+                else {
+                    isYoutubePlaylist = true
+                    tracks.addAll(playlist.tracks)
                 }
             }
         }).get()
 
-        return tracks
+        return tracks to isYoutubePlaylist
     }
 
     fun next() {
         if(player.playingTrack != null) player.stopTrack()
 
-        val track = queue.peek()
+        val track = queue.firstOrNull()
         if(track == null) {
             getGuild().audioManager.closeAudioConnection()
             return
@@ -82,9 +93,10 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
     }
 
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
-        val wrapped = queue.poll() //Pop from queue
-        if(isLooping) queue.add(wrapped)
+        val wrapped = queue.removeAt(0) //Pop from queue
+        if(isLooping) queue.add(AudioTrackWrapper(wrapped.track.makeClone(), wrapped.channel, wrapped.requester))
 
+        voteSkips.clear()
         next()
     }
 }

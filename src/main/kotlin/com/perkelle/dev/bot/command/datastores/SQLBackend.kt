@@ -3,6 +3,7 @@ package com.perkelle.dev.bot.command.datastores
 import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onComplete
+import com.perkelle.dev.bot.utils.onCompleteOrNull
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.experimental.async
@@ -186,12 +187,12 @@ class SQLBackend {
 
     fun getRolePermissions(role: Role, callback: (PermissionList?) -> Unit) {
         async {
-            return@async transaction {
-                return@transaction RolePermissions.select {
+            transaction {
+                RolePermissions.select {
                     RolePermissions.role eq role.idLong
                 }.map { PermissionList(it[RolePermissions.general], it[RolePermissions.music], it[RolePermissions.musicAdmin], it[RolePermissions.moderator], it[RolePermissions.admin]) }.firstOrNull()
             }
-        }.onComplete(callback)
+        }.onCompleteOrNull(callback)
     }
 
     fun setVolume(guildId: Long, volume: Int) {
@@ -228,14 +229,12 @@ class SQLBackend {
 
     fun getPrefix(guildId: Long, callback: (String?) -> Unit) {
         async {
-            return@async transaction {
-                return@transaction Prefixes.select {
+            transaction {
+                Prefixes.select {
                     Prefixes.guild eq guildId
                 }.map { it[Prefixes.prefix] }.firstOrNull()
             }
-        }.onComplete {
-            callback(it)
-        }
+        }.onCompleteOrNull(callback)
     }
 }
 
