@@ -1,7 +1,6 @@
 package com.perkelle.dev.bot.utils
 
 import com.perkelle.dev.bot.Constants
-import com.sun.javaws.exceptions.InvalidArgumentException
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
@@ -69,7 +68,7 @@ fun boolValue(str: String): Boolean {
     return when(str.toLowerCase()) {
         "true" -> true
         "false" -> false
-        else -> throw InvalidArgumentException(arrayOf(str))
+        else -> throw IllegalArgumentException()
     }
 }
 
