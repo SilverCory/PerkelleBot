@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot
 
 import com.perkelle.dev.bot.command.ICommand
+import com.perkelle.dev.bot.command.datastores.RedisBackend
 import com.perkelle.dev.bot.command.datastores.SQLBackend
 import com.perkelle.dev.bot.listeners.CommandListener
 import com.perkelle.dev.bot.listeners.ReactListener
@@ -57,6 +58,7 @@ class PerkelleBot: Runnable {
         println("Initiating datastores")
         try {
             SQLBackend().setup()
+            RedisBackend().setup()
         } catch(ex: Exception) {
             println("Couldn't connect. Are the login details correct?")
             ex.printStackTrace()
