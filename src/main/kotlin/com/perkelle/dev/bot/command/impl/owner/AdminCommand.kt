@@ -37,6 +37,7 @@ class AdminCommand: ICommand {
 
                                     engine.put("jda", guild.jda)
                                     engine.put("bot", PerkelleBot.instance)
+                                    engine.put("shardmanager", getBot().shardManager)
                                     engine.put("guild", guild)
                                     engine.put("wrapper", guild.getWrapper())
                                     engine.put("channel", channel)
