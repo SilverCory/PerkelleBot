@@ -37,7 +37,10 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
     fun queue(audioTrackWrapper: AudioTrackWrapper, silent: Boolean = false) {
         queue.add(audioTrackWrapper)
 
-        if(queue.size == 1) next()
+        if(queue.size == 1) {
+            println("Next 1")
+            next()
+        }
         else if(!silent) audioTrackWrapper.channel.sendEmbed("Music", "Queued **${audioTrackWrapper.track.info.title}** `${audioTrackWrapper.track.duration.formatMillis()}`")
     }
 
@@ -98,5 +101,6 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
 
         voteSkips.clear()
         next()
+        println("Next 2")
     }
 }

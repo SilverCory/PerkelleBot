@@ -19,6 +19,7 @@ class StopCommand: ICommand {
                     val mm = guild.getWrapper().musicManager
                     mm.queue.clear()
                     mm.next()
+                    println("Next 3")
                 }
     }
 }

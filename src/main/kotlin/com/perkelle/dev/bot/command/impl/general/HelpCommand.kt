@@ -22,7 +22,7 @@ class HelpCommand: ICommand {
                             .setColor(Colors.GREEN)
 
                     CommandCategory.values().forEach { category ->
-                        val contents = CommandListener.commands.filter { it.category == category && sender.hasPermission(it.permissionCategory) }.joinToString("\n", transform = { "`${it.name}` - ${it.description}" })
+                        val contents = CommandListener.commands.filter { it.category == category && sender.hasPermission(it.permissionCategory) && (!it.botAdminOnly || (it.botAdminOnly && user.isGlobalAdmin())) }.joinToString("\n", transform = { "`${it.name}` - ${it.description}" })
                         if(contents.isNotEmpty()) message.addField(category.name.capitalize(), contents, false)
                     }
 

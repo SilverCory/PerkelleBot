@@ -11,7 +11,7 @@ fun Member.hasPermission(category: PermissionCategory): Boolean {
     return user.isGlobalAdmin() ||
             isOwner ||
             wrapper.defaultPermissions.isEnabled(category) ||
-            roles.any { wrapper.defaultPermissions.isEnabled(category) }
+            roles.any { wrapper.rolePermissions[it]?.isEnabled(category) ?: false }
 }
 
 fun User.isGlobalAdmin() = getConfig().getAdminIds().contains(idLong)

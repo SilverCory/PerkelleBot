@@ -4,9 +4,12 @@ import com.perkelle.dev.bot.PerkelleBot
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
+import com.perkelle.dev.bot.getBot
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
@@ -28,7 +31,6 @@ class AdminCommand: ICommand {
                         CommandBuilder(true)
                                 .setName("eval")
                                 .setDescription("Runs a JS eval")
-                                .setAliases("js")
                                 .setBotAdminOnly(true)
                                 .setExecutor {
                                     val engine = engineManager.getEngineByName("nashorn")
@@ -48,5 +50,32 @@ class AdminCommand: ICommand {
                                         channel.sendEmbed("Admin", ex.message ?: "Error while performing eval", Colors.RED)
                                     }
                                 })
+                .addChild(CommandBuilder(true)
+                        .setName("shutdown")
+                        .setDescription("Shuts the bot down gracefully")
+                        .setBotAdminOnly(true)
+                        .setExecutor {
+                            channel.sendEmbed("Admin", "Shutting down")
+
+                            PerkelleBot.instance.shardManager.shutdown()
+
+                            launch {
+                                delay(2000)
+                                System.exit(0)
+                            }
+                        })
+                .addChild(CommandBuilder(true)
+                        .setName("sr")
+                        .setDescription("Restart a shard")
+                        .setBotAdminOnly(true)
+                        .setExecutor {
+                            if(args.isEmpty() || args[0].toIntOrNull() == null || PerkelleBot.instance.shardManager.shards.none { it.shardInfo.shardId == args[0].toInt() }) {
+                                channel.sendEmbed("Admin", "Restarting this shard")
+                                getBot().shardManager.restart()
+                            } else {
+                                channel.sendEmbed("Admin", "Restarting shard `${args[0]}`")
+                                getBot().shardManager.restart(args[0].toInt())
+                            }
+                        })
     }
 }
