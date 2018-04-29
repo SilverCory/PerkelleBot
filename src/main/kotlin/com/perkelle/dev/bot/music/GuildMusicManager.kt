@@ -38,7 +38,6 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
         queue.add(audioTrackWrapper)
 
         if(queue.size == 1) {
-            println("Next 1")
             next()
         }
         else if(!silent) audioTrackWrapper.channel.sendEmbed("Music", "Queued **${audioTrackWrapper.track.info.title}** `${audioTrackWrapper.track.duration.formatMillis()}`")
@@ -85,14 +84,18 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
             return
         }
 
-        track.channel.sendEmbed("Music", "Now playing: **${track.track.info.title}** `${track.track.duration.formatMillis()}`", autoDelete = false) {
-                    launch {
-                        delay(track.track.duration)
-                        it.delete().queue()
-                    }
-                }
+        player.startTrack(track.track.makeClone(), false)
+    }
 
-        player.startTrack(track.track, false)
+    override fun onTrackStart(player: AudioPlayer, aTrack: AudioTrack) {
+        val track = queue[0]
+
+        track.channel.sendEmbed("Music", "Now playing: **${track.track.info.title}** `${track.track.duration.formatMillis()}`", autoDelete = false) {
+            launch {
+                delay(track.track.duration)
+                it.delete().queue()
+            }
+        }
     }
 
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
@@ -101,6 +104,5 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
 
         voteSkips.clear()
         next()
-        println("Next 2")
     }
 }

@@ -30,7 +30,7 @@ object PremiumUsers {
                 transaction {
                     Store.select {
                         Store.user eq id
-                    }.map { PremiumUser(id, true, it[Store.expire]) }.firstOrNull() ?: PremiumUser(id, false, null)
+                    }.map { PremiumUser(id, it[Store.expire] > System.currentTimeMillis(), it[Store.expire]) }.firstOrNull() ?: PremiumUser(id, false, null)
                 }
             }.onComplete {
                 cache.add(it)
@@ -87,6 +87,9 @@ object PremiumUsers {
                         if(millis == null) System.currentTimeMillis() + TimeUnit.DAYS.toMillis(months * 30L)
                         else millis + TimeUnit.DAYS.toMillis(months * 30L)
                     }
+
+                    cache.removeAll { it.id == id }
+                    cache.add(PremiumUser(id, true, newExpire))
 
                     transaction {
                         Store.upsert(listOf(Store.expire)) {
