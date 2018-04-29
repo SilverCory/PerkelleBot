@@ -72,11 +72,19 @@ class AdminCommand: ICommand {
                         .setExecutor {
                             if(args.isEmpty() || args[0].toIntOrNull() == null || PerkelleBot.instance.shardManager.shards.none { it.shardInfo.shardId == args[0].toInt() }) {
                                 channel.sendEmbed("Admin", "Restarting this shard")
-                                getBot().shardManager.restart()
+                                getBot().shardManager.restart(guild.jda.shardInfo.shardId)
                             } else {
                                 channel.sendEmbed("Admin", "Restarting shard `${args[0]}`")
                                 getBot().shardManager.restart(args[0].toInt())
                             }
+                        })
+                .addChild(CommandBuilder(true)
+                        .setName("restart")
+                        .setDescription("Restarts all shards")
+                        .setBotAdminOnly(true)
+                        .setExecutor {
+                            channel.sendEmbed("Admin", "Restarting all shards")
+                            getBot().shardManager.restart()
                         })
     }
 }
