@@ -39,6 +39,8 @@ class Top40Command: ICommand {
                     if(mm.player.playingTrack != null) mm.player.stopTrack()
                     else mm.player.startTrack(mm.queue[0].track, false)
 
+                    mm.isLooping = true
+
                     channel.sendEmbed("Music", "Queued the UK top 40")
                 }
     }
