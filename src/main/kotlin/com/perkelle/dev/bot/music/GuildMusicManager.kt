@@ -1,7 +1,7 @@
 package com.perkelle.dev.bot.music
 
 import com.perkelle.dev.bot.PerkelleBot
-import com.perkelle.dev.bot.datastores.getSQLBackend
+import com.perkelle.dev.bot.datastores.tables.Volume
 import com.perkelle.dev.bot.utils.formatMillis
 import com.perkelle.dev.bot.utils.sendEmbed
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
@@ -24,7 +24,7 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
         player.addListener(this)
         getGuild().audioManager.sendingHandler = AudioPlayerSendHandler(player)
 
-        getSQLBackend().getVolume(getGuild().idLong) {
+        Volume.getVolume(getGuild().idLong) {
             player.volume = it
         }
     }

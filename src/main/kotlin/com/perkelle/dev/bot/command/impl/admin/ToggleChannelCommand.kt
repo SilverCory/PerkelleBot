@@ -4,7 +4,7 @@ import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
-import com.perkelle.dev.bot.datastores.getSQLBackend
+import com.perkelle.dev.bot.datastores.tables.DisabledChannels
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.sendEmbed
 
@@ -19,8 +19,8 @@ class ToggleChannelCommand: ICommand {
                 .setExecutor {
                     val wrapper = guild.getWrapper()
 
-                    getSQLBackend().isDisabled(channel.idLong) { disabled ->
-                        getSQLBackend().setDisabled(channel.idLong, !disabled)
+                    DisabledChannels.isDisabled(channel.idLong) { disabled ->
+                        DisabledChannels.setDisabled(channel.idLong, !disabled)
 
                         if(!disabled) {
                             channel.sendEmbed("Toggle Channel","Stopped listening in `${channel.name}`")

@@ -4,12 +4,14 @@ import com.perkelle.dev.bot.PerkelleBot
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
+import com.perkelle.dev.bot.datastores.tables.PremiumKeys
 import com.perkelle.dev.bot.getBot
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import java.util.*
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
@@ -85,6 +87,22 @@ class AdminCommand: ICommand {
                         .setExecutor {
                             channel.sendEmbed("Admin", "Restarting all shards")
                             getBot().shardManager.restart()
+                        })
+                .addChild(CommandBuilder(true)
+                        .setName("genpremium")
+                        .setDescription("Generates a premium key")
+                        .setBotAdminOnly(true)
+                        .setExecutor {
+                            if(args.isEmpty() || args[0].toIntOrNull() == null || args[0].toInt() < 1) {
+                                channel.sendEmbed("Admin", "You need to specify an amount of months", Colors.RED)
+                                return@setExecutor
+                            }
+
+                            val months = args[0].toInt()
+                            val key = UUID.randomUUID().toString().toLowerCase()
+
+                            PremiumKeys.addKey(key, months)
+                            user.openPrivateChannel().queue { it.sendEmbed("Admin", "Generated a new premium key:\n`$key` -> `$months months`", autoDelete = false) }
                         })
     }
 }

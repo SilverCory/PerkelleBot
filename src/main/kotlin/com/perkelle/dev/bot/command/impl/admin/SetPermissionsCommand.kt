@@ -1,7 +1,8 @@
 package com.perkelle.dev.bot.command.impl.admin
 
 import com.perkelle.dev.bot.command.*
-import com.perkelle.dev.bot.datastores.getSQLBackend
+import com.perkelle.dev.bot.datastores.tables.DefaultPermissions
+import com.perkelle.dev.bot.datastores.tables.RolePermissions
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.boolValue
@@ -26,15 +27,15 @@ class SetPermissionsCommand: ICommand {
 
                     val role = message.mentionedRoles[0]
 
-                    getSQLBackend().getEveryonePermissions(guild.idLong) { default ->
-                        getSQLBackend().getRolePermissions(role) {
+                    DefaultPermissions.getEveryonePermissions(guild.idLong) { default ->
+                        RolePermissions.getRolePermissions(role) {
                             val updated = updatePermissionsList(it ?: default, args.copyOfRange(1, args.size).joinToString(" "))
                             val permsList = updated.first
                             val invalid = updated.second
 
                             guild.getWrapper().rolePermissions[role] = permsList
 
-                            getSQLBackend().updateRolePermissions(role, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
+                            RolePermissions.updateRolePermissions(role, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
                             channel.sendEmbed("Permissions", "Updated permissions for ${role.asMention}")
 
                             if(invalid.isNotEmpty()) {
@@ -56,14 +57,14 @@ class SetPermissionsCommand: ICommand {
                                 return@setExecutor
                             }
 
-                            getSQLBackend().getEveryonePermissions(guild.idLong) {
+                            DefaultPermissions.getEveryonePermissions(guild.idLong) {
                                 val updated = updatePermissionsList(it, args.joinToString(" "))
                                 val permsList = updated.first
                                 val invalid = updated.second
 
                                 guild.getWrapper().defaultPermissions = permsList
 
-                                getSQLBackend().updateEveryonePermissions(guild, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
+                                DefaultPermissions.updateEveryonePermissions(guild, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
                                 channel.sendEmbed("Permissions", "Updated permissions for everyone")
 
                                 if(invalid.isNotEmpty()) {

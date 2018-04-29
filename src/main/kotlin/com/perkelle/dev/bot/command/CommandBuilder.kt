@@ -10,6 +10,7 @@ class CommandBuilder(isChild: Boolean = false) {
     var permissionCategory = PermissionCategory.GENERAL //Default to general
     lateinit var executor: CommandContext.() -> Unit
     var botAdminOnly = false
+    var premiumOnly = false
     val aliases = mutableListOf<String>()
     val children = mutableListOf<CommandBuilder>()
 
@@ -49,6 +50,11 @@ class CommandBuilder(isChild: Boolean = false) {
 
     fun setBotAdminOnly(botAdminOnly: Boolean): CommandBuilder {
         this.botAdminOnly = botAdminOnly
+        return this
+    }
+
+    fun setPremiumOnly(premiumOnly: Boolean): CommandBuilder {
+        this.premiumOnly = premiumOnly
         return this
     }
 

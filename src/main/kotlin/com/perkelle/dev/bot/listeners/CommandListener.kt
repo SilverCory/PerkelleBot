@@ -4,6 +4,7 @@ import com.perkelle.dev.bot.Constants
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandContext
 import com.perkelle.dev.bot.command.hasPermission
+import com.perkelle.dev.bot.datastores.tables.BlacklistedMembers
 import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
@@ -88,6 +89,17 @@ class CommandListener: ListenerAdapter(), EventListener {
             return
         }
 
-        subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs, root))
+        BlacklistedMembers.isBlacklisted(user.idLong) { blacklisted ->
+            if(blacklisted) return@isBlacklisted
+
+            guildWrapper.isPremium { premiumGuild ->
+                if(subCmd.premiumOnly && !premiumGuild) {
+                    channel.sendEmbed("Premium Only", "The volume command is restricted to premium guilds only. See `p!premium` for more information on premium", Colors.RED)
+                    return@isPremium
+                }
+
+                subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs, root))
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
-import com.perkelle.dev.bot.datastores.getSQLBackend
+import com.perkelle.dev.bot.datastores.tables.Prefixes
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
@@ -30,7 +30,7 @@ class SetPrefixCommand: ICommand {
                     }
 
                     guild.getWrapper().prefix = prefix
-                    getSQLBackend().setPrefix(guild.idLong, prefix)
+                    Prefixes.setPrefix(guild.idLong, prefix)
                     channel.sendEmbed("Set Prefix", "Updated the guild prefix to `$prefix`. You may still use `p!` though.")
                 }
     }
