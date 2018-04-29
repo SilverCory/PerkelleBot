@@ -37,7 +37,7 @@ dependencies {
     compile "com.google.guava:guava:+"
     compile "mysql:mysql-connector-java:+"
     compile "org.jetbrains.exposed:exposed:+"
-    compile "com.sxtanna.database:Kedis:+"
+    compile "redis.clients:jedis:+"
 }
 
 compileKotlin {

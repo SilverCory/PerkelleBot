@@ -4,7 +4,7 @@ import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
-import com.perkelle.dev.bot.command.datastores.getSQLBackend
+import com.perkelle.dev.bot.datastores.getSQLBackend
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.sendEmbed
 

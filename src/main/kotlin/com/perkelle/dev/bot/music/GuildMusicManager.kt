@@ -1,7 +1,7 @@
 package com.perkelle.dev.bot.music
 
 import com.perkelle.dev.bot.PerkelleBot
-import com.perkelle.dev.bot.command.datastores.getSQLBackend
+import com.perkelle.dev.bot.datastores.getSQLBackend
 import com.perkelle.dev.bot.utils.formatMillis
 import com.perkelle.dev.bot.utils.sendEmbed
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler

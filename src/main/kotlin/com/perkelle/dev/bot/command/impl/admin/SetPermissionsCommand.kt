@@ -1,7 +1,7 @@
 package com.perkelle.dev.bot.command.impl.admin
 
 import com.perkelle.dev.bot.command.*
-import com.perkelle.dev.bot.command.datastores.getSQLBackend
+import com.perkelle.dev.bot.datastores.getSQLBackend
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.boolValue

@@ -1,8 +1,8 @@
 package com.perkelle.dev.bot
 
 import com.perkelle.dev.bot.command.ICommand
-import com.perkelle.dev.bot.command.datastores.RedisBackend
-import com.perkelle.dev.bot.command.datastores.SQLBackend
+import com.perkelle.dev.bot.datastores.RedisBackend
+import com.perkelle.dev.bot.datastores.SQLBackend
 import com.perkelle.dev.bot.listeners.CommandListener
 import com.perkelle.dev.bot.listeners.ReactListener
 import com.perkelle.dev.bot.listeners.ShardStatusListener

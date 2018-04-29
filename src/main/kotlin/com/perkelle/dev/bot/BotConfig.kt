@@ -21,7 +21,7 @@ class BotConfig: JSON() {
 
     fun getRedisHost() = config.getGeneric("redis.host", "localhost")
     fun getRedisPort() = config.getGeneric("redis.port", 6379)
-    fun getRedisAuth() = config.getGeneric("redis.auth", "")
+    fun getRedisAuth() = config.getGenericOrNull<String?>("redis.auth")
     fun getRedisPoolSize() = config.getGeneric("redis.maxsize", 200)
     fun getRedisIdleSize() = config.getGeneric("redis.idlesize", 200)
     fun getRedisTimeout() = config.getGeneric("redis.timeout", 0)

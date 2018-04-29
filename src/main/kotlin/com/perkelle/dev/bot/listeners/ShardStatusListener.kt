@@ -1,6 +1,6 @@
 package com.perkelle.dev.bot.listeners
 
-import com.perkelle.dev.bot.command.datastores.RedisBackend
+import com.perkelle.dev.bot.datastores.RedisBackend
 import com.perkelle.dev.bot.managers.GuildManager
 import com.perkelle.dev.bot.managers.GuildWrapper
 import net.dv8tion.jda.core.events.DisconnectEvent
