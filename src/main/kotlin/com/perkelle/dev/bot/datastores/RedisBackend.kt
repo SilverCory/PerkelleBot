@@ -49,4 +49,21 @@ class RedisBackend {
             }
         }
     }
+
+    object ServerCount {
+
+        private var publishConnection: Jedis? = null
+
+        fun setCount(shard: Int, count: Int) {
+            instance.redis.set("servercount:$shard", count)
+        }
+
+        fun broadcastUpdate(id: Int, count: Int) {
+            if(publishConnection == null) publishConnection = instance.redis.getConnection()
+
+            launch {
+                publishConnection!!.publish("countupdates", "$id:$count")
+            }
+        }
+    }
 }

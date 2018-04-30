@@ -8,6 +8,8 @@ import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.music.AudioTrackWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 
 class Top40Command: ICommand {
@@ -21,6 +23,10 @@ class Top40Command: ICommand {
                 .setPremiumOnly(true)
                 .setExecutor {
                     val audioManager = guild.audioManager
+                    val mm = guild.getWrapper().musicManager
+
+                    mm.isLooping = false
+
                     if(!audioManager.isConnected) {
                         if(!sender.voiceState.inVoiceChannel() || !guild.selfMember.hasPermission(sender.voiceState.channel, Permission.VOICE_CONNECT)) {
                             channel.sendEmbed("Music", "You are not in a voice channel (or I do not have permission to join yours)", Colors.RED)
@@ -30,18 +36,20 @@ class Top40Command: ICommand {
                         audioManager.openAudioConnection(sender.voiceState.channel)
                     }
 
-                    val mm = guild.getWrapper().musicManager
-                    mm.queue.withIndex().forEach { (index, _) -> if(index != 0) mm.queue.removeAt(index) }
+                    mm.queue.clear()
+                    mm.next(false)
 
                     val tracks = mm.loadTracks("https://www.youtube.com/playlist?list=PLx0sYbCqOb8Q_CLZC2BdBSKEEB59BOPUM").first
                     tracks.forEach { mm.queue.add(AudioTrackWrapper(it.makeClone(), channel, sender)) }
 
-                    if(mm.player.playingTrack != null) mm.player.stopTrack()
-                    else mm.player.startTrack(mm.queue[0].track, false)
+                    launch {
+                        delay(1000)
+                        mm.next()
 
-                    mm.isLooping = true
+                        mm.isLooping = true
 
-                    channel.sendEmbed("Music", "Queued the UK top 40")
+                        channel.sendEmbed("Music", "Queued the UK top 40")
+                    }
                 }
     }
 }

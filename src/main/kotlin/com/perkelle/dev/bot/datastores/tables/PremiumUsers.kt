@@ -6,7 +6,6 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.TimeUnit
@@ -54,7 +53,7 @@ object PremiumUsers {
         launch {
             if(premium) {
                 transaction {
-                    Store.insert {
+                    Store.upsert(listOf(Store.expire)) {
                         it[user] = id
                         it[expire] = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(30L * months!!)
                     }

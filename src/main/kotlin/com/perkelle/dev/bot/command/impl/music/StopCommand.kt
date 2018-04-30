@@ -5,6 +5,7 @@ import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
 import com.perkelle.dev.bot.managers.getWrapper
+import com.perkelle.dev.bot.utils.sendEmbed
 
 class StopCommand: ICommand {
 
@@ -19,7 +20,8 @@ class StopCommand: ICommand {
                     val mm = guild.getWrapper().musicManager
                     mm.queue.clear()
                     mm.next()
-                    println("Next 3")
+
+                    channel.sendEmbed("Music", "Stopped all music")
                 }
     }
 }

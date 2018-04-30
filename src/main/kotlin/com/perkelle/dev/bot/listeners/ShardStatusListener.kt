@@ -12,6 +12,11 @@ class ShardStatusListener: ListenerAdapter() {
 
     override fun onReady(e: ReadyEvent) {
         e.jda.guilds.forEach { GuildManager.guilds[it.idLong] = GuildWrapper(it.idLong, e.jda) }
+
+        val shard = e.jda.shardInfo.shardId
+        val count = e.jda.guilds.size
+        RedisBackend.ServerCount.setCount(shard, count)
+        RedisBackend.ServerCount.broadcastUpdate(shard, count)
     }
 
     override fun onDisconnect(e: DisconnectEvent) {

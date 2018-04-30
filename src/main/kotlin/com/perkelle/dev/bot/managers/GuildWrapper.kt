@@ -5,6 +5,7 @@ import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.datastores.tables.*
 import com.perkelle.dev.bot.music.GuildMusicManager
 import net.dv8tion.jda.core.JDA
+import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.Role
 
 class GuildWrapper(val id: Long, val shard: JDA) {
@@ -14,6 +15,7 @@ class GuildWrapper(val id: Long, val shard: JDA) {
     val rolePermissions = mutableMapOf<Role, PermissionList>()
     val disabledChannels = mutableListOf<Long>()
     val musicManager = GuildMusicManager(PerkelleBot.instance.playerManager.createPlayer(), id, shard)
+    var nowPlaying: Message? = null
 
     init {
         val guild = shard.getGuildById(id)
