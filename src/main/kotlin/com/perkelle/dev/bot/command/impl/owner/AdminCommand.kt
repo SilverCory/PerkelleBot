@@ -99,10 +99,14 @@ class AdminCommand: ICommand {
                             }
 
                             val months = args[0].toInt()
-                            val key = UUID.randomUUID().toString().toLowerCase()
+                            val keys = mutableListOf<String>()
 
-                            PremiumKeys.addKey(key, months)
-                            user.openPrivateChannel().queue { it.sendEmbed("Admin", "Generated a new premium key:\n`$key` -> `$months months`", autoDelete = false) }
+                            if(args.size >= 2 && args[1].toIntOrNull() != null && args[1].toInt() > 0) {
+                                for(i in 1..args[1].toInt()) keys.add(UUID.randomUUID().toString())
+                            } else keys.add(UUID.randomUUID().toString())
+
+                            keys.forEach { PremiumKeys.addKey(it, months) }
+                            user.openPrivateChannel().queue { it.sendEmbed("Admin", "Generated new premium keys:\n```${keys.joinToString("\n")}```\n -> `$months months`", autoDelete = false) }
                         })
     }
 }
