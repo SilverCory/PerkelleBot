@@ -93,6 +93,12 @@ class CommandListener: ListenerAdapter(), EventListener {
             if(blacklisted) return@isBlacklisted
 
             guildWrapper.isPremium { premiumGuild ->
+                if(getConfig().isPremium() && !premiumGuild) {
+                    guild.owner.user.openPrivateChannel().queue { it.sendEmbed("No Permission", "Your premium has expired. Type `p!premium` on the main bot for more information on renewing") }
+                    guild.leave().queue()
+                    return@isPremium
+                }
+
                 if(subCmd.premiumOnly && !premiumGuild) {
                     channel.sendEmbed("Premium Only", "The volume command is restricted to premium guilds only. See `p!premium` for more information on premium", Colors.RED)
                     return@isPremium

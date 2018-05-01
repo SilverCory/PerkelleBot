@@ -8,7 +8,7 @@ import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.Role
 
-class GuildWrapper(val id: Long, val shard: JDA) {
+class GuildWrapper(val id: Long, val shard: JDA, callback: (GuildWrapper) -> Unit = {}) {
 
     var prefix: String? = null
     lateinit var defaultPermissions: PermissionList
@@ -22,21 +22,22 @@ class GuildWrapper(val id: Long, val shard: JDA) {
 
         Prefixes.getPrefix(id) {
             prefix = it
-        }
 
-        DefaultPermissions.getEveryonePermissions(id) {
-            defaultPermissions = it
-        }
+            DefaultPermissions.getEveryonePermissions(id) {
+                defaultPermissions = it
 
-        guild.roles.forEach { role ->
-            RolePermissions.getRolePermissions(role) {
-                if(it != null) rolePermissions[role] = it
-            }
-        }
+                guild.roles.forEach { role ->
+                    RolePermissions.getRolePermissions(role) {
+                        if(it != null) rolePermissions[role] = it
+                    }
 
-        guild.textChannels.map { it.idLong }.forEach { channelId ->
-            DisabledChannels.isDisabled(channelId) {
-                if(it) disabledChannels.add(channelId)
+                    guild.textChannels.map { it.idLong }.forEach { channelId ->
+                        DisabledChannels.isDisabled(channelId) {
+                            if(it) disabledChannels.add(channelId)
+                            callback(this)
+                        }
+                    }
+                }
             }
         }
     }

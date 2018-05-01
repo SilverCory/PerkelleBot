@@ -28,5 +28,7 @@ class BotConfig: JSON() {
     fun getRedisIdleSize() = config.getGeneric("redis.idlesize", 200)
     fun getRedisTimeout() = config.getGeneric("redis.timeout", 0)
 
+    fun isPremium() = config.getGeneric("premium", false)
+
     inline fun<reified T>  getValue(key: String, default: T) = config.getGeneric(key, default)
 }
