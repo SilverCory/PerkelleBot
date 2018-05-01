@@ -105,7 +105,7 @@ class CommandListener: ListenerAdapter(), EventListener {
 
         println(7)
 
-        BlacklistedMembers.isBlacklisted(user.idLong) { blacklisted ->
+        BlacklistedMembers.isBlacklisted(sender) { blacklisted ->
             println(blacklisted)
             if(blacklisted) return@isBlacklisted
 

@@ -4,54 +4,54 @@ import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onComplete
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import net.dv8tion.jda.core.entities.Member
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object BlacklistedMembers {
 
-    private val cache = mutableMapOf<Long, Boolean>() //Member ID -> Blacklisted
+    private val cache = mutableMapOf<Pair<Long, Long>, Boolean>() //Guild ID + User ID -> Blacklisted
 
     object Store: Table("${getConfig().getTablePrefix()}blacklist") {
-        val member = long("id").uniqueIndex().primaryKey()
+        val guild = long("guild")
+        val member = long("id")
     }
 
-    fun isBlacklisted(member: Long, callback: (Boolean) -> Unit) {
-        if(cache.containsKey(member)) {
-            callback(cache[member]!!)
+    fun isBlacklisted(member: Member, callback: (Boolean) -> Unit) {
+        if(cache.any { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }) {
+            callback(cache.entries.first { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }.value)
         } else {
             async {
                 transaction {
                     Store.select {
-                        Store.member eq member
-                    }.map { it[Store.member] }.firstOrNull() != null
+                        Store.member eq member.user.idLong and (Store.guild eq member.guild.idLong)
+                    }.firstOrNull() != null
                 }
             }.onComplete {
-                cache[member] = it
+                cache[member.guild.idLong to member.user.idLong] = it
                 callback(it)
             }
         }
     }
 
-    fun addBlacklist(member: Long) {
-        cache[member] = true
+    fun addBlacklist(guild: Long, user: Long) {
+        cache[guild to user] = true
         launch {
             transaction {
                 Store.insert {
-                    it[Store.member] = member
+                    it[Store.guild] = guild
+                    it[Store.member] = user
                 }
             }
         }
     }
 
-    fun removeBlacklist(member: Long) {
-        cache[member] = false
+    fun removeBlacklist(guild: Long, user: Long) {
+        cache[guild to user] = false
         launch {
             transaction {
                 Store.deleteWhere {
-                    Store.member eq member
+                    Store.guild eq guild and (Store.member eq user)
                 }
             }
         }

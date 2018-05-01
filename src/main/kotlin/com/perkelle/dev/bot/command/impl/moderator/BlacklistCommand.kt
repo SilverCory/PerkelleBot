@@ -39,13 +39,13 @@ class BlacklistCommand: ICommand {
                             return@setExecutor
                         }
 
-                        BlacklistedMembers.isBlacklisted(it.user.idLong) { blacklisted ->
+                        BlacklistedMembers.isBlacklisted(it) { blacklisted ->
                             if(blacklisted) {
                                 channel.sendEmbed("Blacklist", "Unblacklisted ${it.asMention}")
-                                BlacklistedMembers.removeBlacklist(it.user.idLong)
+                                BlacklistedMembers.removeBlacklist(guild.idLong, it.user.idLong)
                             } else {
                                 channel.sendEmbed("Blacklist", "Blacklisted ${it.asMention}")
-                                BlacklistedMembers.addBlacklist(it.user.idLong)
+                                BlacklistedMembers.addBlacklist(guild.idLong, it.user.idLong)
                             }
                         }
                     }
