@@ -98,7 +98,7 @@ class PerkelleBot: Runnable {
                     .setToken(config.getToken())
                     .setAudioEnabled(true)
                     .setAutoReconnect(true)
-                    .setGame(Game.of(Game.GameType.DEFAULT, "p!help"))
+                    .setGame(Game.of(Game.GameType.DEFAULT, "${getConfig().getDefaultPrefix()}help"))
                     .setShardsTotal(config.getTotalShards())
                     .setShards(config.getLowestShard(), config.getLowestShard() + config.getTotalShards() - 1)
 
