@@ -1,5 +1,6 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onComplete
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -11,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DisabledChannels {
 
-    object Store: Table("disabledchannels") {
+    object Store: Table("${getConfig().getTablePrefix()}disabledchannels") {
         val channel = long("channel").uniqueIndex().primaryKey()
     }
 

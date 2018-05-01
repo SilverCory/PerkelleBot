@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.datastores.tables
 
 import com.perkelle.dev.bot.datastores.upsert
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onCompleteOrNull
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -10,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object Prefixes {
 
-    object Store: Table("prefixes") {
+    object Store: Table("${getConfig().getTablePrefix()}prefixes") {
         val guild = long("guild").uniqueIndex().primaryKey()
         val prefix = varchar("prefix", 4)
     }

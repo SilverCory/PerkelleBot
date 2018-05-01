@@ -2,6 +2,7 @@ package com.perkelle.dev.bot.datastores.tables
 
 import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.datastores.upsert
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onCompleteOrNull
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -12,7 +13,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object RolePermissions {
 
-    object Store: Table("rolepermissions") {
+    object Store: Table("${getConfig().getTablePrefix()}rolepermissions") {
         val role = long("role").uniqueIndex().primaryKey()
         val general = bool("general")
         val music = bool("music")

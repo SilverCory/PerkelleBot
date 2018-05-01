@@ -9,6 +9,8 @@ class BotConfig: JSON() {
 
     fun getToken() = config.getGenericOrNull<String>("token")
 
+    fun getTablePrefix() = config.getGeneric("mysql.table-prefix", "")
+
     fun getTotalShards() = config.getGeneric("total-shards", -1)
     fun getLowestShard() = config.getGeneric("lowest-shard", 0)
 

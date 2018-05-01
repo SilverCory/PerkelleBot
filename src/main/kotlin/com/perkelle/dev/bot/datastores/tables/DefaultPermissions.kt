@@ -2,6 +2,7 @@ package com.perkelle.dev.bot.datastores.tables
 
 import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.datastores.upsert
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onComplete
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -12,7 +13,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object  DefaultPermissions {
 
-    object Store: Table("defaultpermissions") {
+    object Store: Table("${getConfig().getTablePrefix()}defaultpermissions") {
         val guild = long("guild").uniqueIndex().primaryKey()
         val general = Store.bool("general")
         val music = Store.bool("music")

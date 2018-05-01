@@ -1,5 +1,6 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onComplete
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -13,7 +14,7 @@ object BlacklistedMembers {
 
     private val cache = mutableMapOf<Long, Boolean>() //Member ID -> Blacklisted
 
-    object Store: Table("blacklist") {
+    object Store: Table("${getConfig().getTablePrefix()}blacklist") {
         val member = long("id").uniqueIndex().primaryKey()
     }
 

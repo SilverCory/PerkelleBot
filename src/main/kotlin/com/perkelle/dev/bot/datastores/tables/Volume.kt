@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.datastores.tables
 
 import com.perkelle.dev.bot.datastores.upsert
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.onComplete
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -10,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object Volume {
 
-    object Store: Table("volume") {
+    object Store: Table("${getConfig().getTablePrefix()}volume") {
         val guild = long("guild").uniqueIndex().primaryKey()
         val volume = integer("volume")
     }
