@@ -43,6 +43,8 @@ class CommandListener: ListenerAdapter(), EventListener {
 
         if(requiredPermissions.any { !self.hasPermission(channel, it) }) return
 
+        println(1)
+
         val customPrefix = guildWrapper.prefix
         if(!content.startsWith(getConfig().getDefaultPrefix(), true) && !content.startsWith(customPrefix ?: getConfig().getDefaultPrefix(), true)) return
         val usedPrefix =
@@ -55,10 +57,14 @@ class CommandListener: ListenerAdapter(), EventListener {
 
         if(!root.equals("togglechannel", true) && guildWrapper.disabledChannels.contains(channel.idLong)) return
 
+        println(2)
+
         launch {
             delay(Constants.MESSAGE_DELETE_MILLIS)
             if(self.hasPermission(channel, Permission.MESSAGE_MANAGE)) msg.delete().queue()
         }
+
+        println(3)
 
         val toExecute by lazy {
             val cmd = commands.firstOrNull { it.name.equals(root, true) || it.aliases.any { it.equals(root, true) } } ?: return@lazy null
@@ -76,7 +82,11 @@ class CommandListener: ListenerAdapter(), EventListener {
             }.value
         }
 
+        println(4)
+
         if(toExecute == null) return
+
+        println(5)
 
         val subCmd = toExecute.first
         val subArgs = toExecute.second
@@ -86,13 +96,19 @@ class CommandListener: ListenerAdapter(), EventListener {
             return
         }
 
+        println(6)
+
         if(!sender.hasPermission(subCmd.permissionCategory)) {
             channel.sendEmbed(Constants.NO_PERMISSION, Colors.RED)
             return
         }
 
+        println(7)
+
         BlacklistedMembers.isBlacklisted(user.idLong) { blacklisted ->
             if(blacklisted) return@isBlacklisted
+
+            println(8)
 
             guildWrapper.isPremium { premiumGuild ->
                 if(getConfig().isPremium() && !premiumGuild) {
@@ -101,10 +117,14 @@ class CommandListener: ListenerAdapter(), EventListener {
                     return@isPremium
                 }
 
+                println(9)
+
                 if(subCmd.premiumOnly && !premiumGuild) {
                     channel.sendEmbed("Premium Only", "The volume command is restricted to premium guilds only. See `p!premium` for more information on premium", Colors.RED)
                     return@isPremium
                 }
+
+                println(10)
 
                 subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs, root))
             }
