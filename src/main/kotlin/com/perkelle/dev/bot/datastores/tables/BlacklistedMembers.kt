@@ -19,7 +19,7 @@ object BlacklistedMembers {
 
     fun isBlacklisted(member: Member, callback: (Boolean) -> Unit) {
         if(cache.any { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }) {
-            callback(cache.entries.first { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }.value)
+            callback(cache.entries.first { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }.value) //TODO: Clean up this mess
         } else {
             async {
                 transaction {
@@ -29,6 +29,7 @@ object BlacklistedMembers {
                 }
             }.onComplete {
                 cache[member.guild.idLong to member.user.idLong] = it
+                println("yeet: $it")
                 callback(it)
             }
         }
