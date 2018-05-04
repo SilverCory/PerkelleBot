@@ -32,8 +32,8 @@ class PremiumCommand: ICommand {
                         return@setExecutor
                     }
 
-                    PremiumKeys.removeKey(key)
                     val months = PremiumKeys.getMonths(key)
+                    PremiumKeys.removeKey(key)
                     PremiumUsers.addMonths(user.idLong, months)
                     channel.sendEmbed("Premium", "You have activated your key, granting you `$months` months of premium features in all the guilds you own")
                 }
