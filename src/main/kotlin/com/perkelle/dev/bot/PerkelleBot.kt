@@ -4,9 +4,7 @@ import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.datastores.RedisBackend
 import com.perkelle.dev.bot.datastores.SQLBackend
 import com.perkelle.dev.bot.datastores.tables.PremiumUsers
-import com.perkelle.dev.bot.listeners.CommandListener
-import com.perkelle.dev.bot.listeners.ReactListener
-import com.perkelle.dev.bot.listeners.ShardStatusListener
+import com.perkelle.dev.bot.listeners.*
 import com.perkelle.dev.bot.utils.getCommands
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
@@ -103,7 +101,7 @@ class PerkelleBot: Runnable {
                     .setShardsTotal(config.getTotalShards())
                     .setShards(config.getLowestShard(), config.getLowestShard() + config.getTotalShards() - 1)
 
-            builder.addEventListeners(CommandListener(), ReactListener(), ShardStatusListener())
+            builder.addEventListeners(CommandListener(), JoinListener(), LeaveListener(), ReactListener(), ShardStatusListener())
 
             shardManager = builder.build()
 

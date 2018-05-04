@@ -5,6 +5,7 @@ import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
+import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 
@@ -13,15 +14,17 @@ class JoinListener: ListenerAdapter() {
     override fun onGuildJoin(e: GuildJoinEvent) {
         val guild = e.guild
 
-        val ownerHasPremium = guild.getWrapper().isPremium()
-        if(getConfig().isPremium() && !ownerHasPremium) {
-            guild.owner.user.openPrivateChannel().queue { it.sendEmbed("No Permission", "This bot is for premium users only. Type `p!premium` on the main bot for more information", Colors.RED, autoDelete = false) }
-            guild.leave().queue()
-        }
+        launch {
+            val ownerHasPremium = guild.getWrapper().isPremium()
+            if(getConfig().isPremium() && !ownerHasPremium) {
+                guild.owner.user.openPrivateChannel().queue { it.sendEmbed("No Permission", "This bot is for premium users only. Type `p!premium` on the main bot for more information", Colors.RED, autoDelete = false) }
+                guild.leave().queue()
+            }
 
-        val shard = e.jda.shardInfo.shardId
-        val count = e.jda.guilds.size
-        RedisBackend.ServerCount.setCount(shard, count)
-        RedisBackend.ServerCount.broadcastUpdate(shard, count)
+            val shard = e.jda.shardInfo.shardId
+            val count = e.jda.guilds.size
+            RedisBackend.ServerCount.setCount(shard, count)
+            RedisBackend.ServerCount.broadcastUpdate(shard, count)
+        }
     }
 }
