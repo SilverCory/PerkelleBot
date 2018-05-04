@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.listeners
 
 import com.perkelle.dev.bot.datastores.RedisBackend
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.managers.GuildManager
 import com.perkelle.dev.bot.managers.GuildWrapper
 import net.dv8tion.jda.core.events.DisconnectEvent
@@ -27,7 +28,9 @@ class ShardStatusListener: ListenerAdapter() {
         val id = e.jda.shardInfo?.shardId ?: return
         val status = e.newStatus.name
 
-        RedisBackend.ShardStatus.setStatus(id, status)
-        RedisBackend.ShardStatus.broadcastUpdate(id, status)
+        if(!getConfig().isPremium()) {
+            RedisBackend.ShardStatus.setStatus(id, status)
+            RedisBackend.ShardStatus.broadcastUpdate(id, status)
+        }
     }
 }
