@@ -21,6 +21,7 @@ class AboutCommand: ICommand {
                         Invite: `p!invite`
                         Support: `p!support`
                         Github: `https://github.com/Dot-Rar/PerkelleBot`
+                        Sponsors: `https://deluxenode.com, https://perkelle.com`
                     """.trimIndent())
                 }
     }
