@@ -12,6 +12,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
+import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.Member
 
@@ -23,8 +24,8 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
         player.addListener(this)
         getGuild().audioManager.sendingHandler = AudioPlayerSendHandler(player)
 
-        Volume.getVolume(getGuild().idLong) {
-            player.volume = it
+        launch {
+            player.volume = Volume.getVolume(guildId)
         }
     }
 

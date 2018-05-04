@@ -2,8 +2,12 @@ package com.perkelle.dev.bot.managers
 
 import com.perkelle.dev.bot.PerkelleBot
 import com.perkelle.dev.bot.command.PermissionList
-import com.perkelle.dev.bot.datastores.tables.*
+import com.perkelle.dev.bot.datastores.tables.DefaultPermissions
+import com.perkelle.dev.bot.datastores.tables.Prefixes
+import com.perkelle.dev.bot.datastores.tables.PremiumUsers
+import com.perkelle.dev.bot.datastores.tables.RolePermissions
 import com.perkelle.dev.bot.music.GuildMusicManager
+import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.Role
@@ -18,31 +22,27 @@ class GuildWrapper(val id: Long, val shard: JDA, callback: (GuildWrapper) -> Uni
     var nowPlaying: Message? = null
 
     init {
-        val guild = shard.getGuildById(id)
+        launch {
+            prefix = Prefixes.getPrefix(id)
+            defaultPermissions = DefaultPermissions.getEveryonePermissions(id)
 
-        Prefixes.getPrefix(id) {
-            prefix = it
-
-            DefaultPermissions.getEveryonePermissions(id) {
-                defaultPermissions = it
-
-                guild.roles.forEach { role ->
-                    RolePermissions.getRolePermissions(role) {
-                        if(it != null) rolePermissions[role] = it
-                    }
-
-                    guild.textChannels.map { it.idLong }.forEach { channelId ->
-                        DisabledChannels.isDisabled(channelId) {
-                            if(it) disabledChannels.add(channelId)
-                            callback(this)
-                        }
-                    }
-                }
-            }
+            callback(this@GuildWrapper)
         }
     }
 
     private fun getGuild() = shard.getGuildById(id)
 
-    fun isPremium(callback: (Boolean) -> Unit) = PremiumUsers.isPremium(getGuild().owner.user.idLong, callback)
+    fun isPremium() = PremiumUsers.isPremium(getGuild().owner.user.idLong)
+
+    fun getRolePermissions(role: Role): PermissionList? {
+        return if(rolePermissions.containsKey(role)) rolePermissions[role]
+        else {
+            val permissions = RolePermissions.getRolePermissions(role)
+
+            if(permissions != null) rolePermissions[role] = permissions
+            else rolePermissions[role] = defaultPermissions
+
+            permissions
+        }
+    }
 }

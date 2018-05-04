@@ -25,18 +25,17 @@ class PremiumCommand: ICommand {
                     }
 
                     val key = args[0].toLowerCase()
-                    PremiumKeys.isValid(key) { valid ->
-                        if(!valid) {
-                            channel.sendEmbed("Premium", "Invalid key. Perhaps you copied it incorrectly? Join the support guild (`p!support`) for further assistance.", Colors.RED)
-                            return@isValid
-                        }
+                    val valid = PremiumKeys.isValid(key)
 
-                        PremiumKeys.removeKey(key)
-                        PremiumKeys.getMonths(key) { months ->
-                            PremiumUsers.addMonths(user.idLong, months)
-                            channel.sendEmbed("Premium", "You have activated your key, granting you `$months` months of premium features in all the guilds you own")
-                        }
+                    if(!valid) {
+                        channel.sendEmbed("Premium", "Invalid key. Perhaps you copied it incorrectly? Join the support guild (`p!support`) for further assistance.", Colors.RED)
+                        return@setExecutor
                     }
+
+                    PremiumKeys.removeKey(key)
+                    val months = PremiumKeys.getMonths(key)
+                    PremiumUsers.addMonths(user.idLong, months)
+                    channel.sendEmbed("Premium", "You have activated your key, granting you `$months` months of premium features in all the guilds you own")
                 }
     }
 }

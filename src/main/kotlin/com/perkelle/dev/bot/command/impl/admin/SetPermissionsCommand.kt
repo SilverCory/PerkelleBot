@@ -26,22 +26,20 @@ class SetPermissionsCommand: ICommand {
                     }
 
                     val role = message.mentionedRoles[0]
+                    val default = DefaultPermissions.getEveryonePermissions(guild.idLong)
+                    val rolePerms = RolePermissions.getRolePermissions(role)
 
-                    DefaultPermissions.getEveryonePermissions(guild.idLong) { default ->
-                        RolePermissions.getRolePermissions(role) {
-                            val updated = updatePermissionsList(it ?: default, args.copyOfRange(1, args.size).joinToString(" "))
-                            val permsList = updated.first
-                            val invalid = updated.second
+                    val updated = updatePermissionsList(rolePerms ?: default, args.copyOfRange(1, args.size).joinToString(" "))
+                    val permsList = updated.first
+                    val invalid = updated.second
 
-                            guild.getWrapper().rolePermissions[role] = permsList
+                    guild.getWrapper().rolePermissions[role] = permsList
 
-                            RolePermissions.updateRolePermissions(role, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
-                            channel.sendEmbed("Permissions", "Updated permissions for ${role.asMention}")
+                    RolePermissions.updateRolePermissions(role, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
+                    channel.sendEmbed("Permissions", "Updated permissions for ${role.asMention}")
 
-                            if(invalid.isNotEmpty()) {
-                                channel.sendEmbed("Permissions", "You made a syntax error. Type `p!setperms` for an example of valid syntax, or visit our support guild for help by typing `p!support`", Colors.RED)
-                            }
-                        }
+                    if(invalid.isNotEmpty()) {
+                        channel.sendEmbed("Permissions", "You made a syntax error. Type `p!setperms` for an example of valid syntax, or visit our support guild for help by typing `p!support`", Colors.RED)
                     }
                 }
                 .addChild(CommandBuilder(true)
@@ -57,19 +55,19 @@ class SetPermissionsCommand: ICommand {
                                 return@setExecutor
                             }
 
-                            DefaultPermissions.getEveryonePermissions(guild.idLong) {
-                                val updated = updatePermissionsList(it, args.joinToString(" "))
-                                val permsList = updated.first
-                                val invalid = updated.second
+                            val default = DefaultPermissions.getEveryonePermissions(guild.idLong)
 
-                                guild.getWrapper().defaultPermissions = permsList
+                            val updated = updatePermissionsList(default, args.joinToString(" "))
+                            val permsList = updated.first
+                            val invalid = updated.second
 
-                                DefaultPermissions.updateEveryonePermissions(guild, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
-                                channel.sendEmbed("Permissions", "Updated permissions for everyone")
+                            guild.getWrapper().defaultPermissions = permsList
 
-                                if(invalid.isNotEmpty()) {
-                                    channel.sendEmbed("Permissions", "You made a syntax error. Type `p!setperms` for an example of valid syntax, or visit our support guild for help by typing `p!support`", Colors.RED)
-                                }
+                            DefaultPermissions.updateEveryonePermissions(guild, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
+                            channel.sendEmbed("Permissions", "Updated permissions for everyone")
+
+                            if(invalid.isNotEmpty()) {
+                                channel.sendEmbed("Permissions", "You made a syntax error. Type `p!setperms` for an example of valid syntax, or visit our support guild for help by typing `p!support`", Colors.RED)
                             }
                         })
     }

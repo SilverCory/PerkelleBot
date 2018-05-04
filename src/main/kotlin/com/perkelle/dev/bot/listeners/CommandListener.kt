@@ -30,105 +30,81 @@ class CommandListener: ListenerAdapter(), EventListener {
     )
 
     override fun onGuildMessageReceived(e: GuildMessageReceivedEvent) {
-        val guild = e.guild
-        val guildWrapper = guild.getWrapper()
-        val channel = e.channel
-        val sender = e.member ?: return //Webhook fun
-        val user = sender.user ?: return
-        val msg = e.message
-        val content = msg.contentRaw
-        val self = guild.selfMember
-
-        println(content)
-
-        if(requiredPermissions.any { !self.hasPermission(channel, it) }) return
-
-        println(1)
-
-        val customPrefix = guildWrapper.prefix
-        if(!content.startsWith(getConfig().getDefaultPrefix(), true) && !content.startsWith(customPrefix ?: getConfig().getDefaultPrefix(), true)) return
-        val usedPrefix =
-                if(customPrefix != null && content.startsWith(customPrefix, true)) customPrefix
-                else getConfig().getDefaultPrefix()
-
-        val split = content.split(" ")
-        val root = split[0].substring(usedPrefix.length)
-        val args = split.toTypedArray().copyOfRange(1, split.size)
-
-        if(!root.equals("togglechannel", true) && guildWrapper.disabledChannels.contains(channel.idLong)) return
-
-        println(2)
-
         launch {
-            delay(Constants.MESSAGE_DELETE_MILLIS)
-            if(self.hasPermission(channel, Permission.MESSAGE_MANAGE)) msg.delete().queue()
-        }
+            val guild = e.guild
+            val guildWrapper = guild.getWrapper()
+            val channel = e.channel
+            val sender = e.member ?: return@launch //Webhook fun
+            val user = sender.user ?: return@launch
+            val msg = e.message
+            val content = msg.contentRaw
+            val self = guild.selfMember
 
-        println(3)
+            if(requiredPermissions.any { !self.hasPermission(channel, it) }) return@launch
 
-        val toExecute by lazy {
-            val cmd = commands.firstOrNull { it.name.equals(root, true) || it.aliases.any { it.equals(root, true) } } ?: return@lazy null
-            val subCmds = mutableListOf(cmd)
-            var argNum = 1
+            val customPrefix = guildWrapper.prefix
+            if(!content.startsWith(getConfig().getDefaultPrefix(), true) && !content.startsWith(customPrefix ?: getConfig().getDefaultPrefix(), true)) return@launch
+            val usedPrefix =
+                    if(customPrefix != null && content.startsWith(customPrefix, true)) customPrefix
+                    else getConfig().getDefaultPrefix()
 
-            while(true) {
-                subCmds.add(subCmds.lastOrNull()?.children?.firstOrNull { if(split.size - 1 >= argNum) it.name.equals(split[argNum], true) else false} ?: break)
-                argNum++
+            val split = content.split(" ")
+            val root = split[0].substring(usedPrefix.length)
+            val args = split.toTypedArray().copyOfRange(1, split.size)
+
+            if(!root.equals("togglechannel", true) && guildWrapper.disabledChannels.contains(channel.idLong)) return@launch
+
+            launch {
+                delay(Constants.MESSAGE_DELETE_MILLIS)
+                if(self.hasPermission(channel, Permission.MESSAGE_MANAGE)) msg.delete().queue()
             }
 
-            subCmds.last() to lazy {
-                if(args.isNotEmpty()) args.copyOfRange(argNum-1, args.size)
-                else arrayOf()
-            }.value
-        }
+            val toExecute by lazy {
+                val cmd = commands.firstOrNull { it.name.equals(root, true) || it.aliases.any { it.equals(root, true) } } ?: return@lazy null
+                val subCmds = mutableListOf(cmd)
+                var argNum = 1
 
-        println(4)
-
-        if(toExecute == null) return
-
-        println(5)
-
-        val subCmd = toExecute.first
-        val subArgs = toExecute.second
-
-        if(subCmd.botAdminOnly && !getConfig().getAdminIds().contains(user.idLong)) {
-            channel.sendEmbed(Constants.NO_PERMISSION, Colors.RED)
-            return
-        }
-
-        println(6)
-
-        if(!sender.hasPermission(subCmd.permissionCategory)) {
-            channel.sendEmbed(Constants.NO_PERMISSION, Colors.RED)
-            return
-        }
-
-        println(7)
-
-        BlacklistedMembers.isBlacklisted(sender) { blacklisted ->
-            println(blacklisted)
-            if(blacklisted) return@isBlacklisted
-
-            println(8)
-
-            guildWrapper.isPremium { premiumGuild ->
-                if(getConfig().isPremium() && !premiumGuild) {
-                    guild.owner.user.openPrivateChannel().queue { it.sendEmbed("No Permission", "Your premium has expired. Type `p!premium` on the main bot for more information on renewing") }
-                    guild.leave().queue()
-                    return@isPremium
+                while(true) {
+                    subCmds.add(subCmds.lastOrNull()?.children?.firstOrNull { if(split.size - 1 >= argNum) it.name.equals(split[argNum], true) else false} ?: break)
+                    argNum++
                 }
 
-                println(9)
-
-                if(subCmd.premiumOnly && !premiumGuild) {
-                    channel.sendEmbed("Premium Only", "The volume command is restricted to premium guilds only. See `p!premium` for more information on premium", Colors.RED)
-                    return@isPremium
-                }
-
-                println(10)
-
-                subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs, root))
+                subCmds.last() to lazy {
+                    if(args.isNotEmpty()) args.copyOfRange(argNum-1, args.size)
+                    else arrayOf()
+                }.value
             }
+
+            if(toExecute == null) return@launch
+
+            val subCmd = toExecute.first
+            val subArgs = toExecute.second
+
+            if(subCmd.botAdminOnly && !getConfig().getAdminIds().contains(user.idLong)) {
+                channel.sendEmbed(Constants.NO_PERMISSION, Colors.RED)
+                return@launch
+            }
+
+            if(!sender.hasPermission(subCmd.permissionCategory)) {
+                channel.sendEmbed(Constants.NO_PERMISSION, Colors.RED)
+                return@launch
+            }
+
+            val blacklisted = BlacklistedMembers.isBlacklisted(sender)
+            if(blacklisted) return@launch
+
+            if(getConfig().isPremium() && !guildWrapper.isPremium()) {
+                guild.owner.user.openPrivateChannel().queue { it.sendEmbed("No Permission", "Your premium has expired. Type `p!premium` on the main bot for more information on renewing") }
+                guild.leave().queue()
+                return@launch
+            }
+
+            if(subCmd.premiumOnly && !guildWrapper.isPremium()) {
+                channel.sendEmbed("Premium Only", "The volume command is restricted to premium guilds only. See `p!premium` for more information on premium", Colors.RED)
+                return@launch
+            }
+
+            subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs, root))
         }
     }
 }

@@ -1,11 +1,9 @@
 package com.perkelle.dev.bot.wrappers.redis
 
-import com.perkelle.dev.bot.utils.onComplete
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
+import redis.clients.jedis.JedisPubSub
 
 class RedisWrapper(simpleConfig: RedisConfig) {
 
@@ -47,30 +45,29 @@ class RedisWrapper(simpleConfig: RedisConfig) {
         if(autoClose) jedis.close()
     }
 
+    fun subscribe(channel: String, callback: (String) -> Unit) {
+        val jedis = getConnection()
+        jedis.subscribe(object: JedisPubSub() {
+            override fun onMessage(receivingChannel: String, message: String) {
+                callback(message)
+            }
+        }, "premiumupdates")
+    }
+
+    fun publish(channel: String, message: String) {
+        val jedis = getConnection()
+        jedis.publish(channel, message)
+        jedis.close()
+    }
+
     fun Jedis.execute(block: (Jedis) -> Unit, autoClose: Boolean) {
-        launch {
-            block(this@execute)
-            if(autoClose) this@execute.close()
-        }
+        block(this@execute)
+        if(autoClose) this@execute.close()
     }
 
     fun Jedis.executeQuery(block: (Jedis) -> String, autoClose: Boolean): String {
         val res = block(this@executeQuery)
         if(autoClose) this@executeQuery.close()
         return res
-    }
-
-    fun Jedis.executeQuery(block: (Jedis) -> String, autoClose: Boolean, callback: (String) -> Unit) {
-        async {
-            val res = block(this@executeQuery)
-            if(autoClose) this@executeQuery.close()
-            return@async res
-        }.onComplete(callback)
-    }
-}
-
-fun meme() {
-    RedisWrapper(RedisConfig()).execute {
-
     }
 }

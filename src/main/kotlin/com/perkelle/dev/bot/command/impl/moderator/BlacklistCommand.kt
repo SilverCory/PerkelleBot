@@ -18,35 +18,35 @@ class BlacklistCommand: ICommand {
                 .setCategory(CommandCategory.MODERATION)
                 .setPermission(PermissionCategory.MODERATOR)
                 .setExecutor {
-                    if(message.mentionedMembers.isEmpty()) {
+                    if (message.mentionedMembers.isEmpty()) {
                         channel.sendEmbed("Blacklist", "You need to tag users to blacklist", Colors.RED)
                         return@setExecutor
                     }
 
                     message.mentionedMembers.forEach {
-                        if(!sender.canInteract(it)) {
+                        if (!sender.canInteract(it)) {
                             channel.sendEmbed("Blacklist", "${it.asMention} is a superior to you, you cannot blacklist them", Colors.RED)
                             return@setExecutor
                         }
 
-                        if(!guild.selfMember.canInteract(it)) {
+                        if (!guild.selfMember.canInteract(it)) {
                             channel.sendEmbed("Blacklist", "${it.asMention} is a superior to me, I cannot blacklist them", Colors.RED)
                             return@setExecutor
                         }
 
-                        if(it == sender) {
+                        if (it == sender) {
                             channel.sendEmbed("Blacklist", "You can't blacklist yourself", Colors.RED)
                             return@setExecutor
                         }
 
-                        BlacklistedMembers.isBlacklisted(it) { blacklisted ->
-                            if(blacklisted) {
-                                channel.sendEmbed("Blacklist", "Unblacklisted ${it.asMention}")
-                                BlacklistedMembers.removeBlacklist(guild.idLong, it.user.idLong)
-                            } else {
-                                channel.sendEmbed("Blacklist", "Blacklisted ${it.asMention}")
-                                BlacklistedMembers.addBlacklist(guild.idLong, it.user.idLong)
-                            }
+                        val blacklisted = BlacklistedMembers.isBlacklisted(it)
+
+                        if (blacklisted) {
+                            channel.sendEmbed("Blacklist", "Unblacklisted ${it.asMention}")
+                            BlacklistedMembers.removeBlacklist(guild.idLong, it.user.idLong)
+                        } else {
+                            channel.sendEmbed("Blacklist", "Blacklisted ${it.asMention}")
+                            BlacklistedMembers.addBlacklist(guild.idLong, it.user.idLong)
                         }
                     }
                 }

@@ -3,6 +3,7 @@ package com.perkelle.dev.bot
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.datastores.RedisBackend
 import com.perkelle.dev.bot.datastores.SQLBackend
+import com.perkelle.dev.bot.datastores.tables.PremiumUsers
 import com.perkelle.dev.bot.listeners.CommandListener
 import com.perkelle.dev.bot.listeners.ReactListener
 import com.perkelle.dev.bot.listeners.ShardStatusListener
@@ -54,7 +55,7 @@ class PerkelleBot: Runnable {
             ex.printStackTrace()
             System.exit(-1)
         }
-
+        
         println("Initiating datastores")
         try {
             SQLBackend().setup()
@@ -117,5 +118,10 @@ class PerkelleBot: Runnable {
         }
 
         println("Bot is online!")
+
+        RedisBackend.PremiumUpdates.onPremiumPurchase { user ->
+            PremiumUsers.cache.removeAll { it.id == user.id }
+            PremiumUsers.cache.add(user)
+        }
     }
 }

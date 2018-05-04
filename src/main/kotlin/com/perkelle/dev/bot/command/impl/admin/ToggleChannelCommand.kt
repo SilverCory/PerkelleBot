@@ -19,16 +19,15 @@ class ToggleChannelCommand: ICommand {
                 .setExecutor {
                     val wrapper = guild.getWrapper()
 
-                    DisabledChannels.isDisabled(channel.idLong) { disabled ->
-                        DisabledChannels.setDisabled(channel.idLong, !disabled)
+                    val isDisabled = DisabledChannels.isDisabled(channel.idLong)
+                    DisabledChannels.setDisabled(channel.idLong, !isDisabled)
 
-                        if(!disabled) {
-                            channel.sendEmbed("Toggle Channel","Stopped listening in `${channel.name}`")
-                            wrapper.disabledChannels.add(channel.idLong)
-                        } else {
-                            channel.sendEmbed("Toggle Channel","Started listening in `${channel.name}`")
-                            wrapper.disabledChannels.remove(channel.idLong)
-                        }
+                    if(isDisabled) {
+                        channel.sendEmbed("Toggle Channel","Started listening in `${channel.name}`")
+                        wrapper.disabledChannels.remove(channel.idLong)
+                    } else {
+                        channel.sendEmbed("Toggle Channel","Stopped listening in `${channel.name}`")
+                        wrapper.disabledChannels.add(channel.idLong)
                     }
                 }
     }

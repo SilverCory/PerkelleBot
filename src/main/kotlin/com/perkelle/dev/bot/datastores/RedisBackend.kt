@@ -1,5 +1,6 @@
 package com.perkelle.dev.bot.datastores
 
+import com.perkelle.dev.bot.datastores.tables.PremiumUsers
 import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.wrappers.redis.*
 import kotlinx.coroutines.experimental.launch
@@ -64,6 +65,22 @@ class RedisBackend {
             launch {
                 publishConnection!!.publish("countupdates", "$id:$count")
             }
+        }
+    }
+
+    object PremiumUpdates {
+
+        fun onPremiumPurchase(callback: (PremiumUsers.PremiumUser) -> Unit) {
+            instance.redis.subscribe("premiumupdates") {
+                val id = it.split(":")[0].toLongOrNull() ?: return@subscribe
+                val expire = it.split(":")[1].toLongOrNull() ?: return@subscribe
+
+                callback(PremiumUsers.PremiumUser(id, expire > System.currentTimeMillis(), expire))
+            }
+        }
+
+        fun publishUpdate(user: PremiumUsers.PremiumUser) {
+            instance.redis.publish("premiumupdates", "${user.id}:${user.expire}")
         }
     }
 }

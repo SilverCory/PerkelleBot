@@ -1,9 +1,6 @@
 package com.perkelle.dev.bot.datastores.tables
 
 import com.perkelle.dev.bot.getConfig
-import com.perkelle.dev.bot.utils.onComplete
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.entities.Member
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -17,43 +14,37 @@ object BlacklistedMembers {
         val member = long("id")
     }
 
-    fun isBlacklisted(member: Member, callback: (Boolean) -> Unit) {
-        if(cache.any { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }) {
-            callback(cache.entries.first { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }.value) //TODO: Clean up this mess
-        } else {
-            async {
-                transaction {
-                    Store.select {
-                        Store.member eq member.user.idLong and (Store.guild eq member.guild.idLong)
-                    }.firstOrNull() != null
-                }
-            }.onComplete {
-                cache[member.guild.idLong to member.user.idLong] = it
-                println("yeet: $it")
-                callback(it)
+    fun isBlacklisted(member: Member): Boolean {
+        val cached = cache.entries.firstOrNull { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }?.value
+
+        return if(cached != null) cached
+        else {
+            val blacklisted = transaction {
+                Store.select {
+                    Store.member eq member.user.idLong and (Store.guild eq member.guild.idLong)
+                }.map { it[Store.guild] to it[Store.member] }.firstOrNull() != null
             }
+
+            cache[member.guild.idLong to member.user.idLong] = blacklisted
+            return blacklisted
         }
     }
 
     fun addBlacklist(guild: Long, user: Long) {
         cache[guild to user] = true
-        launch {
-            transaction {
-                Store.insert {
-                    it[Store.guild] = guild
-                    it[Store.member] = user
-                }
+        transaction {
+            Store.insert {
+                it[Store.guild] = guild
+                it[Store.member] = user
             }
         }
     }
 
     fun removeBlacklist(guild: Long, user: Long) {
         cache[guild to user] = false
-        launch {
-            transaction {
-                Store.deleteWhere {
-                    Store.guild eq guild and (Store.member eq user)
-                }
+        transaction {
+            Store.deleteWhere {
+                Store.guild eq guild and (Store.member eq user)
             }
         }
     }
