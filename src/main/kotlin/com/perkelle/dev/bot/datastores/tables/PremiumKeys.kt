@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object PremiumKeys {
 
-    object Store: Table("premiumkeys") {
+    private object Store: Table("premiumkeys") {
         val key = varchar("key", 36)
         val months = integer("months")
     }

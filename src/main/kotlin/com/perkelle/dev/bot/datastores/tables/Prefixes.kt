@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object Prefixes {
 
-    object Store: Table("${getConfig().getTablePrefix()}prefixes") {
+    private object Store: Table("${getConfig().getTablePrefix()}prefixes") {
         val guild = long("guild").uniqueIndex().primaryKey()
         val prefix = varchar("prefix", 4)
     }

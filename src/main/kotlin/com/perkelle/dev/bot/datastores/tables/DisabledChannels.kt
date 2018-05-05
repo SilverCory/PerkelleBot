@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DisabledChannels {
 
-    object Store: Table("${getConfig().getTablePrefix()}disabledchannels") {
+    private object Store: Table("${getConfig().getTablePrefix()}disabledchannels") {
         val channel = long("channel").uniqueIndex().primaryKey()
     }
 

@@ -9,6 +9,8 @@ import com.perkelle.dev.bot.datastores.tables.RolePermissions
 import com.perkelle.dev.bot.music.GuildMusicManager
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.Role
 
@@ -20,8 +22,11 @@ class GuildWrapper(val id: Long, val shard: JDA, callback: (GuildWrapper) -> Uni
     val disabledChannels = mutableListOf<Long>()
     val musicManager = GuildMusicManager(PerkelleBot.instance.playerManager.createPlayer(), id, shard)
     var nowPlaying: Message? = null
+    val admins = mutableListOf<Member>()
 
     init {
+        admins.addAll(getGuild().members.filter { it.hasPermission(Permission.ADMINISTRATOR) })
+
         launch {
             prefix = Prefixes.getPrefix(id)
             defaultPermissions = DefaultPermissions.getEveryonePermissions(id)
@@ -32,7 +37,7 @@ class GuildWrapper(val id: Long, val shard: JDA, callback: (GuildWrapper) -> Uni
 
     private fun getGuild() = shard.getGuildById(id)
 
-    fun isPremium() = PremiumUsers.isPremium(getGuild().owner.user.idLong)
+    fun isPremium() = admins.any { PremiumUsers.isPremium(it.user.idLong) }
 
     fun getRolePermissions(role: Role): PermissionList? {
         return if(rolePermissions.containsKey(role)) rolePermissions[role]

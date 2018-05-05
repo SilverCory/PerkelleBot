@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object Volume {
 
-    object Store: Table("${getConfig().getTablePrefix()}volume") {
+    private object Store: Table("${getConfig().getTablePrefix()}volume") {
         val guild = long("guild").uniqueIndex().primaryKey()
         val volume = integer("volume")
     }

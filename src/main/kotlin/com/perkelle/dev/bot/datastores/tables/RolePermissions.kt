@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object RolePermissions {
 
-    object Store: Table("${getConfig().getTablePrefix()}rolepermissions") {
+    private object Store: Table("${getConfig().getTablePrefix()}rolepermissions") {
         val role = long("role").uniqueIndex().primaryKey()
         val general = bool("general")
         val music = bool("music")

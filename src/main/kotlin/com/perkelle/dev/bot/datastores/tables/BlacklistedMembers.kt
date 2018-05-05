@@ -9,7 +9,7 @@ object BlacklistedMembers {
 
     private val cache = mutableMapOf<Pair<Long, Long>, Boolean>() //Guild ID + User ID -> Blacklisted
 
-    object Store: Table("${getConfig().getTablePrefix()}blacklist") {
+    private object Store: Table("${getConfig().getTablePrefix()}blacklist") {
         val guild = long("guild")
         val member = long("id")
     }

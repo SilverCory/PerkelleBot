@@ -14,7 +14,7 @@ object PremiumUsers {
 
     val cache = mutableListOf<PremiumUser>()
 
-    object Store: Table("premiumusers") {
+    private object Store: Table("premiumusers") {
         val user = long("user").uniqueIndex().primaryKey()
         val expire = long("expiretime")
     }
