@@ -1,18 +1,21 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.getConfig
 import net.dv8tion.jda.core.entities.Member
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object BlacklistedMembers {
+object BlacklistedMembers: DataStore {
 
     private val cache = mutableMapOf<Pair<Long, Long>, Boolean>() //Guild ID + User ID -> Blacklisted
 
-    private object Store: Table("${getConfig().getTablePrefix()}blacklist") {
+    object Store: Table("${getConfig().getTablePrefix()}blacklist") {
         val guild = long("guild")
         val member = long("id")
     }
+
+    override fun getTable() = Store
 
     fun isBlacklisted(member: Member): Boolean {
         val cached = cache.entries.firstOrNull { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }?.value

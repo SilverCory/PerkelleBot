@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.datastores.tables
 
 import com.perkelle.dev.bot.command.PermissionList
+import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.datastores.upsert
 import com.perkelle.dev.bot.getConfig
 import net.dv8tion.jda.core.entities.Guild
@@ -8,7 +9,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object  DefaultPermissions {
+object  DefaultPermissions: DataStore {
 
     private object Store: Table("${getConfig().getTablePrefix()}defaultpermissions") {
         val guild = long("guild").uniqueIndex().primaryKey()
@@ -18,6 +19,8 @@ object  DefaultPermissions {
         val moderator = Store.bool("moderator")
         val admin = Store.bool("admin")
     }
+
+    override fun getTable() = BlacklistedMembers.Store
 
     fun setDefaultEveryonePermissions(guild: Guild) {
         transaction {

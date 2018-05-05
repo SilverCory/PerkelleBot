@@ -1,17 +1,20 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.datastores.DataStore
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object PremiumKeys {
+object PremiumKeys: DataStore {
 
     private object Store: Table("premiumkeys") {
         val key = varchar("key", 36)
         val months = integer("months")
     }
+
+    override fun getTable() = BlacklistedMembers.Store
 
     fun isValid(key: String): Boolean {
         return transaction {

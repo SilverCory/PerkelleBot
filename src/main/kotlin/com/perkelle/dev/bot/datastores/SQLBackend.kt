@@ -46,14 +46,16 @@ class SQLBackend {
 
         launch {
             transaction {
-                SchemaUtils.create(Prefixes.Store)
-                SchemaUtils.create(BlacklistedMembers.Store)
-                SchemaUtils.create(DefaultPermissions.Store)
-                SchemaUtils.create(RolePermissions.Store)
-                SchemaUtils.create(DisabledChannels.Store)
-                SchemaUtils.create(Volume.Store)
-                SchemaUtils.create(PremiumKeys.Store)
-                SchemaUtils.create(PremiumUsers.Store)
+                listOf(
+                        BlacklistedMembers,
+                        DefaultPermissions,
+                        DisabledChannels,
+                        Prefixes,
+                        PremiumKeys,
+                        PremiumUsers,
+                        RolePermissions,
+                        Volume
+                ).forEach { SchemaUtils.create(it.getTable()) }
             }
         }
     }

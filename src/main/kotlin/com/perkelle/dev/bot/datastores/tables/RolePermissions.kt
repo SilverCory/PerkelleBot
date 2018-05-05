@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.datastores.tables
 
 import com.perkelle.dev.bot.command.PermissionList
+import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.datastores.upsert
 import com.perkelle.dev.bot.getConfig
 import net.dv8tion.jda.core.entities.Role
@@ -8,7 +9,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object RolePermissions {
+object RolePermissions: DataStore {
 
     private object Store: Table("${getConfig().getTablePrefix()}rolepermissions") {
         val role = long("role").uniqueIndex().primaryKey()
@@ -18,6 +19,8 @@ object RolePermissions {
         val moderator = bool("moderator")
         val admin = bool("admin")
     }
+
+    override fun getTable() = BlacklistedMembers.Store
 
     fun updateRolePermissions(role: Role, general: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
         transaction {

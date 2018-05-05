@@ -1,17 +1,20 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.datastores.upsert
 import com.perkelle.dev.bot.getConfig
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object Prefixes {
+object Prefixes: DataStore {
 
     private object Store: Table("${getConfig().getTablePrefix()}prefixes") {
         val guild = long("guild").uniqueIndex().primaryKey()
         val prefix = varchar("prefix", 4)
     }
+
+    override fun getTable() = BlacklistedMembers.Store
 
     fun setPrefix(guildId: Long, newPrefix: String) {
         transaction {

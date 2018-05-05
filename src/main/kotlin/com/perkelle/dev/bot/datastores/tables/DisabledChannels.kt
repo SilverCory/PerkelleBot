@@ -1,5 +1,6 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.getConfig
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.deleteWhere
@@ -7,11 +8,13 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object DisabledChannels {
+object DisabledChannels: DataStore {
 
     private object Store: Table("${getConfig().getTablePrefix()}disabledchannels") {
         val channel = long("channel").uniqueIndex().primaryKey()
     }
+
+    override fun getTable() = BlacklistedMembers.Store
 
     fun isDisabled(channelId: Long): Boolean {
         return transaction {

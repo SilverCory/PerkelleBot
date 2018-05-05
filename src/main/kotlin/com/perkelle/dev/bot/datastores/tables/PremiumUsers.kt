@@ -1,5 +1,6 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.datastores.RedisBackend
 import com.perkelle.dev.bot.datastores.upsert
 import org.jetbrains.exposed.sql.Table
@@ -8,7 +9,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.TimeUnit
 
-object PremiumUsers {
+object PremiumUsers: DataStore {
 
     data class PremiumUser(val id: Long, val isPremium: Boolean, val expire: Long?)
 
@@ -18,6 +19,8 @@ object PremiumUsers {
         val user = long("user").uniqueIndex().primaryKey()
         val expire = long("expiretime")
     }
+
+    override fun getTable() = BlacklistedMembers.Store
 
     fun isPremium(id: Long): Boolean {
         val user = cache.firstOrNull { it.id == id }

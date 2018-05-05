@@ -1,11 +1,12 @@
 package com.perkelle.dev.bot.datastores.tables
 
+import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.getConfig
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object CheckSettings {
+object CheckSettings: DataStore {
 
     private val delimiter = ','
 
@@ -14,6 +15,8 @@ object CheckSettings {
         val blockInvites = bool("blockinvites")
         val blacklistedDomains = text("blacklistedDomains")
     }
+
+    override fun getTable() = BlacklistedMembers.Store
 
     private fun getBlacklistedList(guild: Long): String {
         return transaction {
