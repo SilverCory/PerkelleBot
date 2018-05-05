@@ -24,6 +24,11 @@ abstract class JSON(private val folder: File? = null) {
         val json = cfile.bufferedReader().readLines().joinToString(" ")
         config = JSONConfiguration(JSONObject(json))
     }
+
+    fun reload() {
+        val json = cfile.bufferedReader().readLines().joinToString(" ")
+        config = JSONConfiguration(JSONObject(json))
+    }
 }
 
 class JSONConfiguration(val obj: JSONObject) {

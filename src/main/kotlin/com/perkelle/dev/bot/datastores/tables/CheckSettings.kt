@@ -10,6 +10,9 @@ object CheckSettings: DataStore {
 
     private val delimiter = ','
 
+    private val inviteBlockCache = mutableMapOf<Long, Boolean>()
+    private val blacklistCache = mutableMapOf<Long, List<String>>()
+
     private object Store: Table("${getConfig().getTablePrefix()}checks") {
         val guild = long("guild").uniqueIndex().primaryKey()
         val blockInvites = bool("blockinvites")
@@ -26,5 +29,14 @@ object CheckSettings: DataStore {
         }
     }
 
-    fun isBlacklisted(guild: Long, domain: String) = getBlacklistedList(guild).toLowerCase().split(",").contains(domain.toLowerCase())
+    fun isBlacklisted(guild: Long, domain: String): Boolean {
+        return if(blacklistCache.containsKey(guild)) blacklistCache[guild]!!.contains(domain.toLowerCase())
+        else {
+            blacklistCache[guild] = getBlacklistedList(guild).toLowerCase().split(",")
+            isBlacklisted(guild, domain)
+        }
+    }
+
+    fun blacklistDomain(guild: Long, domain: String) {
+    }
 }

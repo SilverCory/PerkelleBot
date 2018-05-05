@@ -40,6 +40,8 @@ class CommandListener: ListenerAdapter(), EventListener {
             val content = msg.contentRaw
             val self = guild.selfMember
 
+            if(user.isBot) return@launch
+
             if(requiredPermissions.any { !self.hasPermission(channel, it) }) return@launch
 
             val customPrefix = guildWrapper.prefix

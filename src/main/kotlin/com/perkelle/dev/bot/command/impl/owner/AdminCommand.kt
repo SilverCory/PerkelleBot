@@ -6,6 +6,7 @@ import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
 import com.perkelle.dev.bot.datastores.tables.PremiumKeys
 import com.perkelle.dev.bot.getBot
+import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
@@ -107,6 +108,14 @@ class AdminCommand: ICommand {
 
                             keys.forEach { PremiumKeys.addKey(it, months) }
                             user.openPrivateChannel().queue { it.sendEmbed("Admin", "Generated new premium keys:\n```${keys.joinToString("\n")}```\n -> `$months months`", autoDelete = false) }
+                        })
+                .addChild(CommandBuilder(true)
+                        .setName("reloadconfig")
+                        .setDescription("Reloads the config")
+                        .setBotAdminOnly(true)
+                        .setExecutor {
+                            getConfig().reload()
+                            channel.sendEmbed("Admin", "Reloaded config")
                         })
     }
 }
