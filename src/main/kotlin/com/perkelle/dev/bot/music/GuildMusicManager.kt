@@ -76,7 +76,10 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
     }
 
     fun next(disconnect: Boolean = true) {
-        if(player.playingTrack != null) player.stopTrack()
+        val old = queue.removeAt(0) //Pop from queue
+        if(isLooping) queue.add(AudioTrackWrapper(old.track.makeClone(), old.channel, old.requester))
+
+        player.stopTrack()
 
         val track = queue.firstOrNull()
         if(track == null && disconnect) {
@@ -84,7 +87,9 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
             return
         }
 
-        player.startTrack(track?.track?.makeClone(), false)
+        if(track == null) return
+
+        player.startTrack(track.track.makeClone(), false)
     }
 
     override fun onTrackStart(player: AudioPlayer, aTrack: AudioTrack) {
@@ -97,11 +102,7 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
     }
 
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
-        val wrapped = queue.removeAt(0) //Pop from queue
-        if(isLooping) queue.add(AudioTrackWrapper(wrapped.track.makeClone(), wrapped.channel, wrapped.requester))
-
         getGuild().getWrapper().nowPlaying?.delete()?.queue()
-
         voteSkips.clear()
         next()
     }

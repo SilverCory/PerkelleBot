@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.command.impl.music
+package com.perkelle.dev.bot.command.impl.general
 
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
