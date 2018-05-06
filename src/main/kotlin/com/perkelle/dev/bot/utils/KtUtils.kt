@@ -1,6 +1,10 @@
 package com.perkelle.dev.bot.utils
 
 import com.perkelle.dev.bot.Constants
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
@@ -8,6 +12,9 @@ import kotlinx.coroutines.experimental.runBlocking
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageChannel
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 fun MessageChannel.sendEmbed(title: String, message: String, color: Int = Colors.GREEN, inline: Boolean = false, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
@@ -79,3 +86,15 @@ fun Long.formatMillis() = String.format("%d min, %d sec",
         TimeUnit.MILLISECONDS.toMinutes(this),
         TimeUnit.MILLISECONDS.toSeconds(this) -
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(this)))
+
+fun AudioTrack.encodeTrack(playerManager: AudioPlayerManager): String {
+    val stream = ByteArrayOutputStream()
+    playerManager.encodeTrack(MessageOutput(stream), this)
+    return Base64.getEncoder().encodeToString(stream.toByteArray())
+}
+
+fun String.decodeTrack(playerManager: AudioPlayerManager): AudioTrack {
+    val bytes = Base64.getDecoder().decode(this)
+    val stream = ByteArrayInputStream(bytes)
+    return playerManager.decodeTrack(MessageInput(stream)).decodedTrack
+}

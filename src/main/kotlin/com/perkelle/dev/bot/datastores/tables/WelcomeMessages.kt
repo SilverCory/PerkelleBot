@@ -23,7 +23,7 @@ object WelcomeMessages: DataStore {
     private val cache = mutableMapOf<Long, String?>()
 
     fun getWelcomeMessage(guild: Long): String? {
-        if(cache.containsKey(guild)) return cache[guild]!!
+        if(cache.containsKey(guild)) return cache[guild]
 
         val message = transaction {
             Store.select {
