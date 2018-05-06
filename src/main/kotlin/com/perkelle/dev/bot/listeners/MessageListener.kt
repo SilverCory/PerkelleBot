@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 class MessageListener: ListenerAdapter() {
 
     override fun onGuildMessageReceived(e: GuildMessageReceivedEvent) {
-        val sender = e.member
+        val sender = e.member ?: return
         val user = sender.user
         val guild = e.guild
         val channel = e.channel

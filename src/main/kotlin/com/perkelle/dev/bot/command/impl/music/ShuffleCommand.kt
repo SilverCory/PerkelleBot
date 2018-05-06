@@ -18,12 +18,9 @@ class ShuffleCommand: ICommand {
                 .setExecutor {
                     channel.sendEmbed("Music", "Shuffled the queue") //Tell them we shuffled even if its empty
 
-                    val queue = guild.getWrapper().musicManager.queue
-                    val current = queue.firstOrNull() ?: return@setExecutor
+                    val queue = guild.getWrapper().musicManager.getScheduler().getQueue()
 
-                    queue.removeAt(0)
                     queue.shuffle()
-                    queue.add(0, current)
                 }
     }
 }

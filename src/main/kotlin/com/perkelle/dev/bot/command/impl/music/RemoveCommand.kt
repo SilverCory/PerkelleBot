@@ -17,15 +17,15 @@ class RemoveCommand: ICommand {
                 .setCategory(CommandCategory.MUSIC)
                 .setPermission(PermissionCategory.MUSIC_ADMIN)
                 .setExecutor {
-                    if(args.isEmpty() || args[0].toIntOrNull() == null || args[0].toInt() < 1 || args[0].toInt() > guild.getWrapper().musicManager.queue.size) {
+                    if(args.isEmpty() || args[0].toIntOrNull() == null || args[0].toInt() < 1 || args[0].toInt() > guild.getWrapper().musicManager.getScheduler().getQueue().size) {
                         channel.sendEmbed("Music", "You need to specify a playlist position", Colors.RED)
                         return@setExecutor
                     }
 
                     val position = args[0].toInt() - 1
 
-                    if(position == 0) guild.getWrapper().musicManager.player.stopTrack()
-                    else guild.getWrapper().musicManager.queue.removeAt(position)
+                    if(position == 0) guild.getWrapper().musicManager.getPlayer().stopTrack()
+                    else guild.getWrapper().musicManager.getScheduler().getQueue().removeAt(position)
 
                     channel.sendEmbed("Music", "Removed song at position `${position + 1}`")
                 }

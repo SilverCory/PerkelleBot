@@ -17,9 +17,9 @@ class LoopCommand: ICommand {
                 .setCategory(CommandCategory.MUSIC)
                 .setPermission(PermissionCategory.MUSIC_ADMIN)
                 .setExecutor {
-                    guild.getWrapper().musicManager.isLooping = !guild.getWrapper().musicManager.isLooping
+                    guild.getWrapper().musicManager.getScheduler().looping = !guild.getWrapper().musicManager.getScheduler().looping
 
-                    if(guild.getWrapper().musicManager.isLooping) channel.sendEmbed("Music", "Enabled queue looping")
+                    if(guild.getWrapper().musicManager.getScheduler().looping) channel.sendEmbed("Music", "Enabled queue looping")
                     else channel.sendEmbed("Music", "Disabled queue looping")
                 }
     }

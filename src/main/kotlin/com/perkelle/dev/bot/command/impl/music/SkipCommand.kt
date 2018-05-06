@@ -17,7 +17,7 @@ class SkipCommand: ICommand {
                 .setPermission(PermissionCategory.MUSIC_ADMIN)
                 .setAliases("s")
                 .setExecutor {
-                    guild.getWrapper().musicManager.player.stopTrack()
+                    guild.getWrapper().musicManager.getScheduler().next()
                     channel.sendEmbed("Music", "${sender.asMention} skipped the song")
                 }
     }

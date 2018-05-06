@@ -1,8 +1,10 @@
-package com.perkelle.dev.bot.music
+package com.perkelle.dev.bot.music.deprecated
 
 import com.perkelle.dev.bot.PerkelleBot
 import com.perkelle.dev.bot.datastores.tables.Volume
 import com.perkelle.dev.bot.managers.getWrapper
+import com.perkelle.dev.bot.music.AudioPlayerSendHandler
+import com.perkelle.dev.bot.music.AudioTrackWrapper
 import com.perkelle.dev.bot.utils.formatMillis
 import com.perkelle.dev.bot.utils.sendEmbed
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
@@ -16,6 +18,7 @@ import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.Member
 
+@Deprecated("Use GuildAudioController")
 class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: JDA): AudioEventAdapter() {
 
     private fun getGuild() = shard.getGuildById(guildId)
@@ -76,11 +79,6 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
     }
 
     fun next(disconnect: Boolean = true) {
-        if(queue.isNotEmpty()) {
-            val old = queue.removeAt(0) //Pop from queue
-            if(isLooping) queue.add(AudioTrackWrapper(old.track.makeClone(), old.channel, old.requester))
-        }
-
         player.stopTrack()
 
         val track = queue.firstOrNull()
@@ -91,7 +89,7 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
 
         if(track == null) return
 
-        player.startTrack(track.track.makeClone(), false)
+        player.startTrack(track.track, false)
     }
 
     override fun onTrackStart(player: AudioPlayer, aTrack: AudioTrack) {
@@ -104,6 +102,11 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
     }
 
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
+        if(queue.isNotEmpty()) {
+            val old = queue.removeAt(0) //Pop from queue
+            if(isLooping) queue.add(AudioTrackWrapper(old.track.makeClone(), old.channel, old.requester))
+        }
+
         getGuild().getWrapper().nowPlaying?.delete()?.queue()
         voteSkips.clear()
         next()

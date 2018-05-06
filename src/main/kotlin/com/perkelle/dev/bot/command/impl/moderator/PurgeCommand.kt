@@ -28,18 +28,18 @@ class PurgeCommand: ICommand {
                     while(toRemove > 0) {
                         when {
                             toRemove >= 100 -> {
-                                channel.history.retrievePast(100).queue { channel.deleteMessages(it) }
+                                channel.history.retrievePast(100).queue { channel.deleteMessages(it).queue() }
                                 toRemove -= 100
                             }
 
                             else -> {
-                                channel.history.retrievePast(toRemove).queue { channel.deleteMessages(it) }
+                                channel.history.retrievePast(toRemove).queue { channel.deleteMessages(it).queue() }
                                 toRemove = 0
                             }
                         }
                     }
 
-                    channel.sendEmbed("Moderation", "Purged `$amount` messages")
+                    channel.sendEmbed("Moderation", "Purged `${amount - 1}` messages")
                     logPurge(sender, channel, amount)
                 }
     }

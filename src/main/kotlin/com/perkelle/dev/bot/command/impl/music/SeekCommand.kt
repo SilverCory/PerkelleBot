@@ -48,7 +48,7 @@ class SeekCommand: ICommand {
                     if(minutes != null) millis += TimeUnit.MINUTES.toMillis(minutes.toLong())
                     millis += TimeUnit.SECONDS.toMillis(seconds.toLong())
 
-                    guild.getWrapper().musicManager.player.playingTrack.position = millis
+                    guild.getWrapper().musicManager.getPlayer().playingTrack.position = millis
 
                     channel.sendEmbed("Seek", "Jumped to ${millis.formatMillis()}")
                 }

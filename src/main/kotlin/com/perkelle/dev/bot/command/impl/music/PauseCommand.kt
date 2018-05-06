@@ -16,8 +16,8 @@ class PauseCommand: ICommand {
                 .setCategory(CommandCategory.MUSIC)
                 .setPermission(PermissionCategory.MUSIC_ADMIN)
                 .setExecutor {
-                    val newValue = !guild.getWrapper().musicManager.player.isPaused
-                    guild.getWrapper().musicManager.player.isPaused = newValue
+                    val newValue = !guild.getWrapper().musicManager.getPlayer().isPaused
+                    guild.getWrapper().musicManager.getPlayer().isPaused = newValue
 
                     if(newValue) channel.sendEmbed("Music", "Paused music playback. Use `p!pause` to resume it again.")
                     else channel.sendEmbed("Music", "Resumed music playback. Use `p!pause` to pause it again.")

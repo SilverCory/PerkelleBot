@@ -18,8 +18,9 @@ class StopCommand: ICommand {
                 .setPermission(PermissionCategory.MUSIC_ADMIN)
                 .setExecutor {
                     val mm = guild.getWrapper().musicManager
-                    mm.queue.clear()
-                    mm.next()
+                    mm.getScheduler().looping = false
+                    mm.getScheduler().getQueue().clear()
+                    mm.getScheduler().next()
 
                     channel.sendEmbed("Music", "Stopped all music")
                 }

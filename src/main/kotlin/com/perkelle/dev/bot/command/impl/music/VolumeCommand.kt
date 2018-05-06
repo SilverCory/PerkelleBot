@@ -25,7 +25,7 @@ class VolumeCommand: ICommand {
                     }
 
                     val volume = args[0].toInt()
-                    guild.getWrapper().musicManager.player.volume = volume
+                    guild.getWrapper().musicManager.getPlayer().volume = volume
                     Volume.setVolume(guild.idLong, volume)
                     channel.sendEmbed("Music", "Changed volume to `$volume`")
                 }

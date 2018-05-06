@@ -1,12 +1,11 @@
 package com.perkelle.dev.bot.managers
 
-import com.perkelle.dev.bot.PerkelleBot
 import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.datastores.tables.DefaultPermissions
 import com.perkelle.dev.bot.datastores.tables.Prefixes
 import com.perkelle.dev.bot.datastores.tables.PremiumUsers
 import com.perkelle.dev.bot.datastores.tables.RolePermissions
-import com.perkelle.dev.bot.music.GuildMusicManager
+import com.perkelle.dev.bot.music.GuildAudioControllerFactory
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.Permission
@@ -20,7 +19,7 @@ class GuildWrapper(val id: Long, val shard: JDA, callback: (GuildWrapper) -> Uni
     lateinit var defaultPermissions: PermissionList
     val rolePermissions = mutableMapOf<Role, PermissionList>()
     val disabledChannels = mutableListOf<Long>()
-    val musicManager = GuildMusicManager(PerkelleBot.instance.playerManager.createPlayer(), id, shard)
+    val musicManager = GuildAudioControllerFactory.createController(getGuild())
     var nowPlaying: Message? = null
     val admins = mutableListOf<Member>()
 

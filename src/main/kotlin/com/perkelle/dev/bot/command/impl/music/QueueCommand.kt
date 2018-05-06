@@ -19,7 +19,8 @@ class QueueCommand: ICommand {
                 .setCategory(CommandCategory.MUSIC)
                 .setPermission(PermissionCategory.MUSIC)
                 .setExecutor {
-                    val fullList = guild.getWrapper().musicManager.queue
+                    val fullList = guild.getWrapper().musicManager.getScheduler().getQueue()
+
                     val page =
                             if (args.isEmpty() || args[0].toIntOrNull() == null || args[0].toInt() < 1 || args[0].toInt() > Math.ceil(fullList.size / 5.0)) 0
                             else args[0].toInt() - 1

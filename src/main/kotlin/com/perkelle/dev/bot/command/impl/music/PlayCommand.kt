@@ -5,7 +5,7 @@ import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.listeners.addReactCallback
 import com.perkelle.dev.bot.listeners.removeCallback
 import com.perkelle.dev.bot.managers.getWrapper
-import com.perkelle.dev.bot.music.AudioTrackWrapper
+import com.perkelle.dev.bot.music.TrackLoader
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.formatMillis
 import com.perkelle.dev.bot.utils.sendEmbed
@@ -56,7 +56,7 @@ class PlayCommand: ICommand {
                     if(type == RequestType.YOUTUBE_SEARCH) request = "ytsearch: $request"
                     else if(type == RequestType.SOUNDCLOUD_SEARCH) request = "scsearch: $request"
 
-                    val loadResult = guild.getWrapper().musicManager.loadTracks(request, 5)
+                    val loadResult = TrackLoader.load(request, 5)
                     val tracks = loadResult.first
 
                     if(tracks.isEmpty()) {
@@ -65,7 +65,7 @@ class PlayCommand: ICommand {
                     }
 
                     if(loadResult.second) {
-                        tracks.forEach { guild.getWrapper().musicManager.queue(AudioTrackWrapper(it, channel, sender), true) }
+                        tracks.forEach { guild.getWrapper().musicManager.getScheduler().queue(it, channel, sender) }
                         channel.sendEmbed("Music", "Added all songs to the queue")
                     }
                     else {
@@ -98,7 +98,8 @@ class PlayCommand: ICommand {
 
                                 msg.delete().queue()
 
-                                guild.getWrapper().musicManager.queue(AudioTrackWrapper(track, channel, sender))
+                                guild.getWrapper().musicManager.getScheduler().queue(track, channel, sender)
+                                channel.sendEmbed("Music", "Queued **${track.info.title}** (`${track.duration.formatMillis()}`)")
                             }
                         }
                     }
