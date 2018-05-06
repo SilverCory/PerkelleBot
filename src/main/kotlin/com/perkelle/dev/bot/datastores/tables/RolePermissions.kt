@@ -20,7 +20,10 @@ object RolePermissions: DataStore {
         val admin = bool("admin")
     }
 
-    override fun getTable() = BlacklistedMembers.Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun updateRolePermissions(role: Role, general: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
         transaction {

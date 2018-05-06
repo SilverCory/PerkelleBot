@@ -48,13 +48,16 @@ class SQLBackend {
             transaction {
                 listOf(
                         BlacklistedMembers,
+                        BlockInvites,
                         DefaultPermissions,
                         DisabledChannels,
+                        ModLogChannels,
                         Prefixes,
                         PremiumKeys,
                         PremiumUsers,
                         RolePermissions,
-                        Volume
+                        Volume,
+                        WelcomeMessages
                 ).forEach { SchemaUtils.create(it.getTable()) }
             }
         }

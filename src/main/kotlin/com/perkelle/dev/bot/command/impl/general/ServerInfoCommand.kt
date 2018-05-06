@@ -12,6 +12,7 @@ class ServerInfoCommand: ICommand {
     override fun register() {
         CommandBuilder()
                 .setName("serverinfo")
+                .setDescription("Provides information about the server")
                 .setCategory(CommandCategory.GENERAL)
                 .setPermission(PermissionCategory.GENERAL)
                 .setExecutor {

@@ -10,12 +10,15 @@ object BlacklistedMembers: DataStore {
 
     private val cache = mutableMapOf<Pair<Long, Long>, Boolean>() //Guild ID + User ID -> Blacklisted
 
-    object Store: Table("${getConfig().getTablePrefix()}blacklist") {
+    private object Store: Table("${getConfig().getTablePrefix()}blacklist") {
         val guild = long("guild")
         val member = long("id")
     }
 
-    override fun getTable() = Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun isBlacklisted(member: Member): Boolean {
         val cached = cache.entries.firstOrNull { it.key.first == member.guild.idLong && it.key.second == member.user.idLong }?.value

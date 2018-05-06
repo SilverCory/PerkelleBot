@@ -42,6 +42,9 @@ fun Message.deleteAfter(millis: Long = Constants.MESSAGE_DELETE_MILLIS) {
 object Colors {
     val GREEN = 2335514
     val RED = 11010048
+    val ORANGE = 16740864
+    val LIME = 7658240
+    val BLUE = 472219
 }
 
 fun<T> Deferred<T>.onComplete(block: (T) -> Unit) = invokeOnCompletion { block(getCompleted()) }

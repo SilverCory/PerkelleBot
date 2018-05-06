@@ -14,7 +14,10 @@ object Volume: DataStore {
         val volume = integer("volume")
     }
 
-    override fun getTable() = BlacklistedMembers.Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun setVolume(guildId: Long, volume: Int) {
         transaction {

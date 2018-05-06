@@ -20,7 +20,10 @@ object  DefaultPermissions: DataStore {
         val admin = Store.bool("admin")
     }
 
-    override fun getTable() = BlacklistedMembers.Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun setDefaultEveryonePermissions(guild: Guild) {
         transaction {

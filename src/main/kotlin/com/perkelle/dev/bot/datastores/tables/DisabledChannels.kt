@@ -14,7 +14,10 @@ object DisabledChannels: DataStore {
         val channel = long("channel").uniqueIndex().primaryKey()
     }
 
-    override fun getTable() = BlacklistedMembers.Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun isDisabled(channelId: Long): Boolean {
         return transaction {

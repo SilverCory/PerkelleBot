@@ -14,7 +14,10 @@ object PremiumKeys: DataStore {
         val months = integer("months")
     }
 
-    override fun getTable() = BlacklistedMembers.Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun isValid(key: String): Boolean {
         return transaction {

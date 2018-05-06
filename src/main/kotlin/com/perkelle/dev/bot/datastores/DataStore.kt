@@ -5,4 +5,6 @@ import org.jetbrains.exposed.sql.Table
 interface DataStore {
 
     fun getTable(): Table
+
+    val instance: Table
 }

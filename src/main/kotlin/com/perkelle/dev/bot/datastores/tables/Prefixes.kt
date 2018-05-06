@@ -14,7 +14,10 @@ object Prefixes: DataStore {
         val prefix = varchar("prefix", 4)
     }
 
-    override fun getTable() = BlacklistedMembers.Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun setPrefix(guildId: Long, newPrefix: String) {
         transaction {

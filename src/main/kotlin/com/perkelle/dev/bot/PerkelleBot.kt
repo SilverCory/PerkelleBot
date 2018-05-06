@@ -101,7 +101,15 @@ class PerkelleBot: Runnable {
                     .setShardsTotal(config.getTotalShards())
                     .setShards(config.getLowestShard(), config.getLowestShard() + config.getTotalShards() - 1)
 
-            builder.addEventListeners(CommandListener(), JoinListener(), LeaveListener(), ReactListener(), ShardStatusListener())
+            builder.addEventListeners(
+                    CommandListener(),
+                    JoinListener(),
+                    LeaveListener(),
+                    MemberJoinListener(),
+                    MessageListener(),
+                    ReactListener(),
+                    ShardStatusListener()
+            )
 
             shardManager = builder.build()
 

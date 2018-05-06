@@ -20,7 +20,10 @@ object PremiumUsers: DataStore {
         val expire = long("expiretime")
     }
 
-    override fun getTable() = BlacklistedMembers.Store
+    override val instance: Table
+        get() = Store
+
+    override fun getTable() = instance
 
     fun isPremium(id: Long): Boolean {
         val user = cache.firstOrNull { it.id == id }
