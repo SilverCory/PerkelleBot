@@ -76,8 +76,10 @@ class GuildMusicManager(val player: AudioPlayer, val guildId: Long, val shard: J
     }
 
     fun next(disconnect: Boolean = true) {
-        val old = queue.removeAt(0) //Pop from queue
-        if(isLooping) queue.add(AudioTrackWrapper(old.track.makeClone(), old.channel, old.requester))
+        if(queue.isNotEmpty()) {
+            val old = queue.removeAt(0) //Pop from queue
+            if(isLooping) queue.add(AudioTrackWrapper(old.track.makeClone(), old.channel, old.requester))
+        }
 
         player.stopTrack()
 
