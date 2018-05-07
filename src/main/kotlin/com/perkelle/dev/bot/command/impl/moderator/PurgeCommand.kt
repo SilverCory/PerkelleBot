@@ -40,7 +40,7 @@ class PurgeCommand: ICommand {
                     }
 
                     channel.sendEmbed("Moderation", "Purged `${amount - 1}` messages")
-                    logPurge(sender, channel, amount)
+                    logPurge(sender, channel, amount - 1)
                 }
     }
 }

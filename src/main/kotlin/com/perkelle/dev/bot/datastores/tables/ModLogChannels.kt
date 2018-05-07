@@ -26,6 +26,8 @@ object ModLogChannels: DataStore {
         val guild = channel.guild.idLong
         val id = channel.idLong
 
+        cache[guild] = id
+
         transaction {
             Store.upsert(listOf(Store.channel)) {
                 it[Store.guild] = guild
