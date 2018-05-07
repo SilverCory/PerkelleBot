@@ -33,7 +33,7 @@ class VoteSkipCommand: ICommand {
                     mm.voteSkips.add(sender)
 
                     if(mm.voteSkips.size >= Math.floor((vc.members.size - 1) / 2.0)) {
-                        mm.getPlayer().stopTrack()
+                        mm.getScheduler().next()
                         channel.sendEmbed("Music", "Over 50% of users voted to skip the song")
                     } else {
                         channel.sendEmbed("Music", "${sender.asMention} voted to skip the song `${mm.voteSkips.size} / ${Math.floor((vc.members.size - 1) / 2.0).toInt()}`")
