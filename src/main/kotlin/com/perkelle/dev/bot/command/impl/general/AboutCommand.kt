@@ -20,6 +20,7 @@ class AboutCommand: ICommand {
                         Help: `p!help`
                         Invite: `p!invite`
                         Support: `p!support`
+                        Website: <https://bot.perkelle.com>
                         Github: `https://github.com/Dot-Rar/PerkelleBot`
                         Sponsors: `https://deluxenode.com, https://perkelle.com`
                     """.trimIndent())

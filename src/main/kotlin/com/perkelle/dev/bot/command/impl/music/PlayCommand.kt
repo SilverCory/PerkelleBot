@@ -1,7 +1,9 @@
 package com.perkelle.dev.bot.command.impl.music
 
 import com.perkelle.dev.bot.command.CommandBuilder
+import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
+import com.perkelle.dev.bot.command.PermissionCategory
 import com.perkelle.dev.bot.listeners.addReactCallback
 import com.perkelle.dev.bot.listeners.removeCallback
 import com.perkelle.dev.bot.managers.getWrapper
@@ -23,6 +25,8 @@ class PlayCommand: ICommand {
                 .setName("play")
                 .setDescription("Play a song from a URL or YouTube")
                 .setAliases("p", "sc", "soundcloud")
+                .setCategory(CommandCategory.MUSIC)
+                .setPermission(PermissionCategory.MUSIC)
                 .setExecutor {
                     if(args.isEmpty()) {
                         channel.sendEmbed("Music", "You need to specify a search term or URL")

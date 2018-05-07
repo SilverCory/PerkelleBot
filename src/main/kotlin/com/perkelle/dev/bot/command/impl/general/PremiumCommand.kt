@@ -19,7 +19,7 @@ class PremiumCommand: ICommand {
                 .setPermission(PermissionCategory.GENERAL)
                 .setExecutor {
                     if(args.isEmpty()) {
-                        channel.sendEmbed("Premium", "Join to support guild (`p!support`) and visit the #premium channel for more information on Perkelle Bot Premium\n" +
+                        channel.sendEmbed("Premium", "Visit <https://bot.perkelle.com/premium.php> for more information on premium\n" +
                                 "Already got a key? Type `p!premium KEY_HERE` to activate it!")
                         return@setExecutor
                     }

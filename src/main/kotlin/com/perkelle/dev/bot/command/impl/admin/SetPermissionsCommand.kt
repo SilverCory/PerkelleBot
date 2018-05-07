@@ -19,9 +19,7 @@ class SetPermissionsCommand: ICommand {
                 .setCategory(CommandCategory.SETTINGS)
                 .setExecutor {
                     if(message.mentionedRoles.isEmpty() || !args[0].startsWith("<@&", true) || args.size < 2) {
-                        channel.sendEmbed("Permissions", "You need to specify permissions. \n**Available permission types:** ${PermissionCategory.values().joinToString(", ") { "`${it.name.toLowerCase()}`" }}. " +
-                                "\n**Example syntax:** `p!setperms @DJ general=true music=true music_admin=true moderator=false admin=false`." +
-                                "\n**Hint:** You don't have to specify all permissions, only the ones you want to update.", Colors.RED)
+                        channel.sendEmbed("Permissions", "You need to specify permissions. Refer to <https://bot.perkelle.com/permissions.php> for help using this command.", Colors.RED)
                         return@setExecutor
                     }
 
@@ -39,7 +37,7 @@ class SetPermissionsCommand: ICommand {
                     channel.sendEmbed("Permissions", "Updated permissions for ${role.asMention}")
 
                     if(invalid.isNotEmpty()) {
-                        channel.sendEmbed("Permissions", "You made a syntax error. Type `p!setperms` for an example of valid syntax, or visit our support guild for help by typing `p!support`", Colors.RED)
+                        channel.sendEmbed("Permissions", "You made a syntax error. Visit <https://bot.perkelle.com/permissions.php>, or visit our support guild for help by typing `p!support`", Colors.RED)
                     }
                 }
                 .addChild(CommandBuilder(true)
