@@ -68,12 +68,17 @@ class PlayCommand: ICommand {
                         return@setExecutor
                     }
 
-                    if(loadResult.second) {
-                        tracks.forEach { guild.getWrapper().musicManager.getScheduler().queue(it, channel, sender) }
-                        channel.sendEmbed("Music", "Added all songs to the queue")
-                    }
-                    else {
-                        channel.sendEmbed("Music", tracks.withIndex().joinToString("\n") { (index, track) -> "`${index + 1}` ${track.info.title} - ${track.info.author} `${track.duration.formatMillis()}`" }) { msg ->
+                    when {
+                        loadResult.second -> {
+                            tracks.forEach { guild.getWrapper().musicManager.getScheduler().queue(it, channel, sender) }
+                            channel.sendEmbed("Music", "Added all songs to the queue")
+                        }
+                        tracks.size == 1 -> {
+                            val track = tracks[0]
+                            guild.getWrapper().musicManager.getScheduler().queue(track, channel, sender)
+                            channel.sendEmbed("Music", "Queued **${track.info.title}** (`${track.duration.formatMillis()}`)")
+                        }
+                        else -> channel.sendEmbed("Music", tracks.withIndex().joinToString("\n") { (index, track) -> "`${index + 1}` ${track.info.title} - ${track.info.author} `${track.duration.formatMillis()}`" }) { msg ->
                             msg.addReaction("\u0031\u20E3").queue()
                             try {
                                 if (tracks.size >= 2) msg.addReaction("\u0032\u20E3").queue()

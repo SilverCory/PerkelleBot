@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.music
 
 import com.perkelle.dev.bot.getBot
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.Member
 
@@ -11,6 +12,7 @@ object GuildAudioControllerFactory {
 
             private val player = getPlayerManager().createPlayer()
             private val scheduler = TrackScheduler(getPlayer(), guild.idLong, guild.jda)
+            private val equalizer = EqualizerFactory()
 
             override val voteSkips = mutableListOf<Member>()
 
@@ -19,6 +21,8 @@ object GuildAudioControllerFactory {
             override fun getPlayerManager() = getBot().playerManager
 
             override fun getScheduler() = scheduler
+
+            override fun getEqualizer() = equalizer
         }
     }
 }
