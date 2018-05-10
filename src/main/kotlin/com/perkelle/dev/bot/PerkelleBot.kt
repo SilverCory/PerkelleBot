@@ -67,6 +67,7 @@ class PerkelleBot: Runnable {
         println("Starting audio module...")
         try {
             playerManager = DefaultAudioPlayerManager()
+            playerManager.configuration.isFilterHotSwapEnabled = true
 
             //Register sources
             setOf<AudioSourceManager>(
