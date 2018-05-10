@@ -32,14 +32,14 @@ class BassCommand: ICommand {
                         return@setExecutor
                     }
 
-                    val boost = args[0].toInt() / 10
+                    val boost = args[0].toFloat() / 10
 
                     Constants.BASS_BOOST.withIndex().forEach { (index, value) ->
                         mm.getEqualizer().setGain(index, value + boost)
                     }
                     mm.getPlayer().setFilterFactory(mm.getEqualizer())
 
-                    channel.sendEmbed("Music", "Set bass boost level to `$boost`")
+                    channel.sendEmbed("Music", "Set bass boost level to `${(boost * 10).toInt()}`")
                 }
     }
 }
