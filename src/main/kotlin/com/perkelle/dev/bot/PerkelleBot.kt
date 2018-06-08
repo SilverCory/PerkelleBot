@@ -103,6 +103,7 @@ class PerkelleBot: Runnable {
                     .setShards(config.getLowestShard(), config.getLowestShard() + config.getTotalShards() - 1)
 
             builder.addEventListeners(
+                    AFKPingListener(),
                     CommandListener(),
                     JoinListener(),
                     LeaveListener(),
