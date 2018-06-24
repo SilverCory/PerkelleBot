@@ -98,3 +98,17 @@ fun String.decodeTrack(playerManager: AudioPlayerManager): AudioTrack {
     val stream = ByteArrayInputStream(bytes)
     return playerManager.decodeTrack(MessageInput(stream)).decodedTrack
 }
+
+fun<T> List<T>.with(element: T): List<T> {
+    val clone = mutableListOf<T>()
+    clone.addAll(this)
+    clone.add(element)
+    return clone
+}
+
+fun<T> List<T>.without(element: T): List<T> {
+    val clone = mutableListOf<T>()
+    clone.addAll(this)
+    if(clone.contains(element)) clone.remove(element)
+    return clone
+}

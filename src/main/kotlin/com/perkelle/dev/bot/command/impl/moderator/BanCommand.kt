@@ -8,6 +8,7 @@ import com.perkelle.dev.bot.logging.EventType
 import com.perkelle.dev.bot.logging.log
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
+import net.dv8tion.jda.core.Permission
 
 class BanCommand: ICommand {
 
@@ -29,8 +30,13 @@ class BanCommand: ICommand {
                         return@setExecutor
                     }
 
-                    if(!guild.selfMember.canInteract(member)) {
-                        channel.sendEmbed("Moderation", "I can't ban ${member.asMention}", Colors.RED)
+                    if(!guild.selfMember.canInteract(member) || !guild.selfMember.hasPermission(Permission.BAN_MEMBERS)) {
+                        channel.sendEmbed("Moderation", "I don't have permission to ban ${member.asMention}", Colors.RED)
+                        return@setExecutor
+                    }
+
+                    if(!sender.canInteract(member)) {
+                        channel.sendEmbed("Moderation", "${member.asMention} is higher ranked than you. You do not have permission to ban them.")
                         return@setExecutor
                     }
 

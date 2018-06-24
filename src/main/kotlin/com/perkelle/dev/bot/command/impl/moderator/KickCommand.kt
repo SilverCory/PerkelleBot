@@ -8,6 +8,7 @@ import com.perkelle.dev.bot.logging.EventType
 import com.perkelle.dev.bot.logging.log
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
+import net.dv8tion.jda.core.Permission
 
 class KickCommand: ICommand {
 
@@ -29,8 +30,13 @@ class KickCommand: ICommand {
                         return@setExecutor
                     }
 
-                    if(!guild.selfMember.canInteract(member)) {
+                    if(!guild.selfMember.canInteract(member) || !guild.selfMember.hasPermission(Permission.KICK_MEMBERS)) {
                         channel.sendEmbed("Moderation", "I can't kick ${member.asMention}", Colors.RED)
+                        return@setExecutor
+                    }
+
+                    if(!sender.canInteract(member)) {
+                        channel.sendEmbed("Moderation", "${member.asMention} is higher ranked than you. You do not have permission to kick them.")
                         return@setExecutor
                     }
 
