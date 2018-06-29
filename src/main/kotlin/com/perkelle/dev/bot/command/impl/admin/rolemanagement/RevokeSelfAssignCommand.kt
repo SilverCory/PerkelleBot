@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.command.impl.admin.selfassign
+package com.perkelle.dev.bot.command.impl.admin.rolemanagement
 
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory

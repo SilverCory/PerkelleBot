@@ -47,6 +47,7 @@ class SQLBackend {
         launch {
             transaction {
                 listOf(
+                        AutoRole,
                         BlacklistedMembers,
                         BlockInvites,
                         DefaultPermissions,
