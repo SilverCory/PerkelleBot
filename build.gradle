@@ -26,8 +26,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:+"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-io:+"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5"
     compile "net.dv8tion:JDA:3.6.0_356"
     compile "com.sedmelluq:lavaplayer:1.2.63"
     compile "org.json:json:+"
@@ -35,7 +34,7 @@ dependencies {
     compile "com.zaxxer:HikariCP:3.0.0"
     compile "com.google.guava:guava:+"
     compile "mysql:mysql-connector-java:+"
-    compile "org.jetbrains.exposed:exposed:+"
+    compile "org.jetbrains.exposed:exposed:0.10.3"
     compile "redis.clients:jedis:+"
 }
 
