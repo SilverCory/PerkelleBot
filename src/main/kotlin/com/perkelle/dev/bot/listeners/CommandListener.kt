@@ -106,7 +106,7 @@ class CommandListener: ListenerAdapter(), EventListener {
                 return@launch
             }
 
-            subCmd.executor(CommandContext(user, sender, guild, channel, msg, subArgs, root))
+            subCmd.executor.execute(CommandContext(user, sender, guild, channel, msg, subArgs, root, subCmd))
         }
     }
 }

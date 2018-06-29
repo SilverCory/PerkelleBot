@@ -57,6 +57,7 @@ class SQLBackend {
                         PremiumUsers,
                         RolePermissions,
                         SelfAssignableRoles,
+                        Tags,
                         Volume,
                         WelcomeMessages
                 ).forEach { SchemaUtils.create(it.getTable()) }

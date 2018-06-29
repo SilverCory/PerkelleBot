@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.command.impl.admin
+package com.perkelle.dev.bot.command.impl.admin.permissions
 
 import com.perkelle.dev.bot.command.*
 import com.perkelle.dev.bot.managers.getWrapper
@@ -8,7 +8,7 @@ import com.perkelle.dev.bot.utils.sendEmbed
 class ViewPermissionsCommand: ICommand {
 
     override fun register() {
-        CommandBuilder()
+        val cmdBuilder = CommandBuilder()
                 .setName("roleperms")
                 .setAliases("viewperms", "viewpermissions", "viewroleperms")
                 .setDescription("View the permissions that a role (or everyone) has")
@@ -32,21 +32,22 @@ class ViewPermissionsCommand: ICommand {
                                 |Admin: ${perms.admin}
                             """.trimMargin())
                 }
-                .addChild(CommandBuilder(true)
-                        .setName("everyone")
-                        .setDescription("View the permissions of everyone")
-                        .setAliases("all")
-                        .setCategory(CommandCategory.SETTINGS)
-                        .setPermission(PermissionCategory.ADMIN)
-                        .setExecutor {
-                            val perms = guild.getWrapper().defaultPermissions
-                            channel.sendEmbed("Permissions", """All users have the following permissions:
-                                |General: ${perms.general}
-                                |Music: ${perms.music}
-                                |Music Admin: ${perms.musicAdmin}
-                                |Moderator: ${perms.moderator}
-                                |Admin: ${perms.admin}
-                            """.trimMargin())
-                        })
+
+        cmdBuilder.addChild(CommandBuilder(true, cmdBuilder)
+                .setName("everyone")
+                .setDescription("View the permissions of everyone")
+                .setAliases("all")
+                .setCategory(CommandCategory.SETTINGS)
+                .setPermission(PermissionCategory.ADMIN)
+                .setExecutor {
+                    val perms = guild.getWrapper().defaultPermissions
+                    channel.sendEmbed("Permissions", """All users have the following permissions:
+                    |General: ${perms.general}
+                    |Music: ${perms.music}
+                    |Music Admin: ${perms.musicAdmin}
+                    |Moderator: ${perms.moderator}
+                    |Admin: ${perms.admin}
+                    """.trimMargin())
+                })
     }
 }

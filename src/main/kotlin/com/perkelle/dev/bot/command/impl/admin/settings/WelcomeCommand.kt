@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.command.impl.admin
+package com.perkelle.dev.bot.command.impl.admin.settings
 
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory

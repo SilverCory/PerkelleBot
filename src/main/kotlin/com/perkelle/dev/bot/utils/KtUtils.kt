@@ -46,6 +46,8 @@ fun Message.deleteAfter(millis: Long = Constants.MESSAGE_DELETE_MILLIS) {
     }
 }
 
+fun MessageChannel.sendPlain(contents: String) = sendMessage(contents).queue { it.deleteAfter() }
+
 object Colors {
     val GREEN = 2335514
     val RED = 11010048

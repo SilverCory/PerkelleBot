@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.command.impl.admin
+package com.perkelle.dev.bot.command.impl.admin.checks
 
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory

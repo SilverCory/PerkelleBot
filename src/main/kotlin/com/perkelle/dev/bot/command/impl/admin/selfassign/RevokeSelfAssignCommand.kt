@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.command.impl.admin
+package com.perkelle.dev.bot.command.impl.admin.selfassign
 
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
@@ -8,17 +8,17 @@ import com.perkelle.dev.bot.datastores.tables.SelfAssignableRoles
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
 
-class AllowSelfAssignCommand: ICommand {
+class RevokeSelfAssignCommand: ICommand {
 
     override fun register() {
         CommandBuilder()
-                .setName("allowselfassign")
-                .setDescription("Allow a role to be self-assignable")
+                .setName("revokeselfassign")
+                .setDescription("Revoke a role from being self-assignable")
                 .setPermission(PermissionCategory.ADMIN)
                 .setCategory(CommandCategory.SETTINGS)
                 .setExecutor {
                     if(args.isEmpty()) {
-                        channel.sendEmbed("Role Assign", "You need to specify a role to set to be self-assignable", Colors.RED)
+                        channel.sendEmbed("Role Assign", "You need to specify a role to remove from the self-assignable roles", Colors.RED)
                         return@setExecutor
                     }
 
@@ -30,7 +30,7 @@ class AllowSelfAssignCommand: ICommand {
                         return@setExecutor
                     }
 
-                    SelfAssignableRoles.allowSelfAssign(role, guild.idLong)
+                    SelfAssignableRoles.disallowSelfAssign(role, guild.idLong)
                     channel.sendEmbed("Role Assign", "`${role.name}` is now self-assignable")
                 }
     }

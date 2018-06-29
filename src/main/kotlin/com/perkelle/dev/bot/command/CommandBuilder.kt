@@ -2,13 +2,13 @@ package com.perkelle.dev.bot.command
 
 import com.perkelle.dev.bot.listeners.CommandListener
 
-class CommandBuilder(isChild: Boolean = false) {
+class CommandBuilder(val isChild: Boolean = false, val parent: CommandBuilder? = null) {
 
     lateinit var name: String
     lateinit var description: String
     var category = CommandCategory.GENERAL //Default to general
     var permissionCategory = PermissionCategory.GENERAL //Default to general
-    lateinit var executor: CommandContext.() -> Unit
+    lateinit var executor: Executor
     var botAdminOnly = false
     var premiumOnly = false
     val aliases = mutableListOf<String>()
@@ -44,6 +44,16 @@ class CommandBuilder(isChild: Boolean = false) {
     }
 
     fun setExecutor(executor: CommandContext.() -> Unit): CommandBuilder {
+        this.executor = object: Executor {
+            override fun CommandContext.onExecute() {
+                executor(this)
+            }
+        }
+
+        return this
+    }
+
+    fun setExecutor(executor: Executor): CommandBuilder {
         this.executor = executor
         return this
     }

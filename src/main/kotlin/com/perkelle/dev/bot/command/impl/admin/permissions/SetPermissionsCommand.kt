@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.command.impl.admin
+package com.perkelle.dev.bot.command.impl.admin.permissions
 
 import com.perkelle.dev.bot.command.*
 import com.perkelle.dev.bot.datastores.tables.DefaultPermissions
@@ -11,7 +11,7 @@ import com.perkelle.dev.bot.utils.sendEmbed
 class SetPermissionsCommand: ICommand {
 
     override fun register() {
-        CommandBuilder()
+        val cmdBuilder = CommandBuilder()
                 .setName("setperms")
                 .setDescription("Update the permissions of a role or everyone")
                 .setAliases("setpermissions")
@@ -40,34 +40,35 @@ class SetPermissionsCommand: ICommand {
                         channel.sendEmbed("Permissions", "You made a syntax error. Visit <https://bot.perkelle.com/permissions.php>, or visit our support guild for help by typing `p!support`", Colors.RED)
                     }
                 }
-                .addChild(CommandBuilder(true)
-                        .setName("everyone")
-                        .setDescription("Update the permissions of everyone")
-                        .setCategory(CommandCategory.SETTINGS)
-                        .setPermission(PermissionCategory.ADMIN)
-                        .setExecutor {
-                            if(args.isEmpty()) {
-                                channel.sendEmbed("Permissions", "You need to specify permissions. \n**Available permission types:** ${PermissionCategory.values().joinToString(", ") { "`${it.name.toLowerCase()}`" }}. " +
-                                        "\n**Example syntax:** `p!setperms everyone general=true music=true music_admin=true moderator=false admin=false`." +
-                                        "\n**Hint:** You don't have to specify all permissions, only the ones you want to update.")
-                                return@setExecutor
-                            }
 
-                            val default = DefaultPermissions.getEveryonePermissions(guild.idLong)
+        cmdBuilder.addChild(CommandBuilder(true, cmdBuilder)
+                .setName("everyone")
+                .setDescription("Update the permissions of everyone")
+                .setCategory(CommandCategory.SETTINGS)
+                .setPermission(PermissionCategory.ADMIN)
+                .setExecutor {
+                    if(args.isEmpty()) {
+                        channel.sendEmbed("Permissions", "You need to specify permissions. \n**Available permission types:** ${PermissionCategory.values().joinToString(", ") { "`${it.name.toLowerCase()}`" }}. " +
+                                "\n**Example syntax:** `p!setperms everyone general=true music=true music_admin=true moderator=false admin=false`." +
+                                "\n**Hint:** You don't have to specify all permissions, only the ones you want to update.")
+                        return@setExecutor
+                    }
 
-                            val updated = updatePermissionsList(default, args.joinToString(" "))
-                            val permsList = updated.first
-                            val invalid = updated.second
+                    val default = DefaultPermissions.getEveryonePermissions(guild.idLong)
 
-                            guild.getWrapper().defaultPermissions = permsList
+                    val updated = updatePermissionsList(default, args.joinToString(" "))
+                    val permsList = updated.first
+                    val invalid = updated.second
 
-                            DefaultPermissions.updateEveryonePermissions(guild, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
-                            channel.sendEmbed("Permissions", "Updated permissions for everyone")
+                    guild.getWrapper().defaultPermissions = permsList
 
-                            if(invalid.isNotEmpty()) {
-                                channel.sendEmbed("Permissions", "You made a syntax error. Type `p!setperms` for an example of valid syntax, or visit our support guild for help by typing `p!support`", Colors.RED)
-                            }
-                        })
+                    DefaultPermissions.updateEveryonePermissions(guild, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
+                    channel.sendEmbed("Permissions", "Updated permissions for everyone")
+
+                    if(invalid.isNotEmpty()) {
+                        channel.sendEmbed("Permissions", "You made a syntax error. Type `p!setperms` for an example of valid syntax, or visit our support guild for help by typing `p!support`", Colors.RED)
+                    }
+                })
     }
 
     /**
