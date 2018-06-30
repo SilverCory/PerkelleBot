@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.permissions
 
 import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.datastores.DataStore
@@ -28,7 +28,7 @@ object  DefaultPermissions: DataStore {
     fun setDefaultEveryonePermissions(guild: Guild) {
         transaction {
             Store.upsert(listOf(Store.general, Store.music, Store.musicAdmin, Store.moderator, Store.admin)) {
-                it[this.guild] = guild.idLong
+                it[Store.guild] = guild.idLong
                 it[general] = true
                 it[music] = true
                 it[musicAdmin] = false
@@ -49,12 +49,12 @@ object  DefaultPermissions: DataStore {
     fun updateEveryonePermissions(guild: Guild, general: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
         transaction {
             Store.upsert(listOf(Store.general, Store.music, Store.musicAdmin, Store.moderator, Store.admin)) {
-                it[this.guild] = guild.idLong
-                it[this.general] = general
-                it[this.music] = music
-                it[this.musicAdmin] = musicAdmin
-                it[this.moderator] = moderator
-                it[this.admin] = admin
+                it[Store.guild] = guild.idLong
+                it[Store.general] = general
+                it[Store.music] = music
+                it[Store.musicAdmin] = musicAdmin
+                it[Store.moderator] = moderator
+                it[Store.admin] = admin
             }
         }
     }

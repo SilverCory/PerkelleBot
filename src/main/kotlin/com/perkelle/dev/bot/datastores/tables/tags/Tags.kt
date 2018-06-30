@@ -1,8 +1,7 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.tags
 
 import com.perkelle.dev.bot.command.impl.tags.Tag
 import com.perkelle.dev.bot.datastores.DataStore
-import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.utils.with
 import com.perkelle.dev.bot.utils.without
 import org.jetbrains.exposed.sql.*
@@ -10,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object Tags: DataStore {
 
-    private object Store: Table(getConfig().getTablePrefix() + "tags") {
+    private object Store: Table("tags") {
         val guild = long("guild")
         val name = varchar("name", 100)
         val content = text("content")

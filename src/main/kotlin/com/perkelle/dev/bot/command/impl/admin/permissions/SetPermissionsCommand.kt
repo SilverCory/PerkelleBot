@@ -1,8 +1,8 @@
 package com.perkelle.dev.bot.command.impl.admin.permissions
 
 import com.perkelle.dev.bot.command.*
-import com.perkelle.dev.bot.datastores.tables.DefaultPermissions
-import com.perkelle.dev.bot.datastores.tables.RolePermissions
+import com.perkelle.dev.bot.datastores.tables.permissions.DefaultPermissions
+import com.perkelle.dev.bot.datastores.tables.permissions.RolePermissions
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.boolValue

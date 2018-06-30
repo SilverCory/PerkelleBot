@@ -22,7 +22,7 @@ class SponsorsCommand: ICommand {
                             EmbedBuilder()
                                     .setColor(Colors.GREEN)
                                     .setTitle("Sponsors")
-                                    .addField("DeluxeNode", "DeluxeNode is a Minecraft, Web and VPS host with owned, high quality hardware starting from $1 / month. Their servers feature NVME SSDs, Threadripper CPUs and DDR4 RAM and 1660 GBPS DDoS protection.", true)
+                                    .addField("DeluxeNode", "DeluxeNode is a Minecraft, Web and VPS host with owned, high quality hardware starting from €1 / month. Their servers feature NVME SSDs, Threadripper CPUs and DDR4 RAM and 1660 GBPS DDoS protection.", true)
                                     .build()
                     ).queue { it.deleteAfter() }
                 }

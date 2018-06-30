@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.permissions
 
 import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.datastores.DataStore
@@ -28,12 +28,12 @@ object RolePermissions: DataStore {
     fun updateRolePermissions(role: Role, general: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
         transaction {
             Store.upsert(listOf(Store.general, Store.music, Store.musicAdmin, Store.moderator, Store.admin)) {
-                it[this.role] = role.idLong
-                it[this.general] = general
-                it[this.music] = music
-                it[this.musicAdmin] = musicAdmin
-                it[this.moderator] = moderator
-                it[this.admin] = admin
+                it[Store.role] = role.idLong
+                it[Store.general] = general
+                it[Store.music] = music
+                it[Store.musicAdmin] = musicAdmin
+                it[Store.moderator] = moderator
+                it[Store.admin] = admin
             }
         }
     }

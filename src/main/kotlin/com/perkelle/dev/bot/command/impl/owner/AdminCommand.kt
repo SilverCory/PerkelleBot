@@ -4,7 +4,7 @@ import com.perkelle.dev.bot.PerkelleBot
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
-import com.perkelle.dev.bot.datastores.tables.PremiumKeys
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumKeys
 import com.perkelle.dev.bot.getBot
 import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.managers.getWrapper
@@ -45,8 +45,9 @@ class AdminCommand: ICommand {
                             engine.put("guild", guild)
                             engine.put("wrapper", guild.getWrapper())
                             engine.put("channel", channel)
-                            engine.put("sender", user)
+                            engine.put("user", user)
                             engine.put("sender", sender)
+                            engine.put("msg", message)
 
                             try {
                                 val result = engine.eval(args.joinToString(" "))
@@ -62,7 +63,8 @@ class AdminCommand: ICommand {
                 .setExecutor {
                     channel.sendEmbed("Admin", "Shutting down")
 
-                    PerkelleBot.instance.shardManager.shutdown()
+                    getBot().shardManager.shards.forEach { it.shutdownNow() }
+                    getBot().shardManager.shutdown()
 
                     launch {
                         delay(2000)

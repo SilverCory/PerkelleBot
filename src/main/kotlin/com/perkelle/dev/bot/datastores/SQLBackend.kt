@@ -1,6 +1,17 @@
 package com.perkelle.dev.bot.datastores
 
-import com.perkelle.dev.bot.datastores.tables.*
+import com.perkelle.dev.bot.datastores.tables.checks.BlockInvites
+import com.perkelle.dev.bot.datastores.tables.music.Volume
+import com.perkelle.dev.bot.datastores.tables.permissions.DefaultPermissions
+import com.perkelle.dev.bot.datastores.tables.permissions.RolePermissions
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumKeys
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumUsers
+import com.perkelle.dev.bot.datastores.tables.roles.AutoRole
+import com.perkelle.dev.bot.datastores.tables.roles.SelfAssignableRoles
+import com.perkelle.dev.bot.datastores.tables.settings.*
+import com.perkelle.dev.bot.datastores.tables.starboard.StarboardAmounts
+import com.perkelle.dev.bot.datastores.tables.starboard.StarboardChannels
+import com.perkelle.dev.bot.datastores.tables.tags.Tags
 import com.perkelle.dev.bot.getConfig
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -58,6 +69,8 @@ class SQLBackend {
                         PremiumUsers,
                         RolePermissions,
                         SelfAssignableRoles,
+                        StarboardAmounts,
+                        StarboardChannels,
                         Tags,
                         Volume,
                         WelcomeMessages

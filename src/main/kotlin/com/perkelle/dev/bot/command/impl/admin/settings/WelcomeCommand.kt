@@ -4,7 +4,7 @@ import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
-import com.perkelle.dev.bot.datastores.tables.WelcomeMessages
+import com.perkelle.dev.bot.datastores.tables.settings.WelcomeMessages
 import com.perkelle.dev.bot.utils.sendEmbed
 
 class WelcomeCommand: ICommand {

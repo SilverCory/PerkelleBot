@@ -1,6 +1,6 @@
 package com.perkelle.dev.bot.logging
 
-import com.perkelle.dev.bot.datastores.tables.ModLogChannels
+import com.perkelle.dev.bot.datastores.tables.settings.ModLogChannels
 import com.perkelle.dev.bot.utils.Colors
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.*

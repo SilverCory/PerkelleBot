@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.premium
 
 import com.perkelle.dev.bot.datastores.DataStore
 import org.jetbrains.exposed.sql.Table
