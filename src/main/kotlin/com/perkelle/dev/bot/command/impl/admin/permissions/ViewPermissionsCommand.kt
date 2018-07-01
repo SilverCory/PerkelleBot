@@ -23,9 +23,11 @@ class ViewPermissionsCommand: ICommand {
                     val wrapper = guild.getWrapper()
                     val role = message.mentionedRoles[0]
 
-                    val perms = wrapper.rolePermissions[role] ?: PermissionList(true, true, false, false, false)
+                    val perms = wrapper.rolePermissions[role] ?: PermissionList(true, false, false,true, false, false, false)
                     channel.sendEmbed("Permissions", """All users have the following permissions:
                                 |General: ${perms.general}
+                                |Tickets: ${perms.tickets}
+                                |Tickets Manager: ${perms.ticketsManager}
                                 |Music: ${perms.music}
                                 |Music Admin: ${perms.musicAdmin}
                                 |Moderator: ${perms.moderator}
@@ -43,6 +45,8 @@ class ViewPermissionsCommand: ICommand {
                     val perms = guild.getWrapper().defaultPermissions
                     channel.sendEmbed("Permissions", """All users have the following permissions:
                     |General: ${perms.general}
+                    |Tickets: ${perms.tickets}
+                    |Tickets Manager: ${perms.ticketsManager}
                     |Music: ${perms.music}
                     |Music Admin: ${perms.musicAdmin}
                     |Moderator: ${perms.moderator}

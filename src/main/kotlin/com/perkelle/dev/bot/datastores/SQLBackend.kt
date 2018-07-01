@@ -12,6 +12,9 @@ import com.perkelle.dev.bot.datastores.tables.settings.*
 import com.perkelle.dev.bot.datastores.tables.starboard.StarboardAmounts
 import com.perkelle.dev.bot.datastores.tables.starboard.StarboardChannels
 import com.perkelle.dev.bot.datastores.tables.tags.Tags
+import com.perkelle.dev.bot.datastores.tables.tickets.TicketChannelCategories
+import com.perkelle.dev.bot.datastores.tables.tickets.TicketWelcomeMessages
+import com.perkelle.dev.bot.datastores.tables.tickets.Tickets
 import com.perkelle.dev.bot.getConfig
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -72,6 +75,9 @@ class SQLBackend {
                         StarboardAmounts,
                         StarboardChannels,
                         Tags,
+                        TicketChannelCategories,
+                        Tickets,
+                        TicketWelcomeMessages,
                         Volume,
                         WelcomeMessages
                 ).forEach { SchemaUtils.create(it.getTable()) }

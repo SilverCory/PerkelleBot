@@ -19,6 +19,8 @@ fun User.isGlobalAdmin() = getConfig().getAdminIds().contains(idLong)
 fun PermissionList.isEnabled(category: PermissionCategory): Boolean {
     return when(category) {
         PermissionCategory.GENERAL -> general
+        PermissionCategory.TICKETS -> tickets
+        PermissionCategory.TICKETS_MANAGER -> ticketsManager
         PermissionCategory.MUSIC -> music
         PermissionCategory.MUSIC_ADMIN -> musicAdmin
         PermissionCategory.MODERATOR -> moderator
@@ -26,4 +28,4 @@ fun PermissionList.isEnabled(category: PermissionCategory): Boolean {
     }
 }
 
-data class PermissionList(val general: Boolean, val music: Boolean, val musicAdmin: Boolean, val moderator: Boolean, val admin: Boolean)
+data class PermissionList(val general: Boolean, val tickets: Boolean, val ticketsManager: Boolean, val music: Boolean, val musicAdmin: Boolean, val moderator: Boolean, val admin: Boolean)

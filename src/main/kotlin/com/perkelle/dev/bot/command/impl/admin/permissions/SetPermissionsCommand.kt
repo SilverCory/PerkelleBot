@@ -33,7 +33,7 @@ class SetPermissionsCommand: ICommand {
 
                     guild.getWrapper().rolePermissions[role] = permsList
 
-                    RolePermissions.updateRolePermissions(role, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
+                    RolePermissions.updateRolePermissions(role, permsList.general, permsList.tickets, permsList.ticketsManager, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
                     channel.sendEmbed("Permissions", "Updated permissions for ${role.asMention}")
 
                     if(invalid.isNotEmpty()) {
@@ -49,7 +49,7 @@ class SetPermissionsCommand: ICommand {
                 .setExecutor {
                     if(args.isEmpty()) {
                         channel.sendEmbed("Permissions", "You need to specify permissions. \n**Available permission types:** ${PermissionCategory.values().joinToString(", ") { "`${it.name.toLowerCase()}`" }}. " +
-                                "\n**Example syntax:** `p!setperms everyone general=true music=true music_admin=true moderator=false admin=false`." +
+                                "\n**Example syntax:** `p!setperms everyone general=true tickets=false tickets_manager=false music=true music_admin=true moderator=false admin=false`." +
                                 "\n**Hint:** You don't have to specify all permissions, only the ones you want to update.")
                         return@setExecutor
                     }
@@ -62,7 +62,7 @@ class SetPermissionsCommand: ICommand {
 
                     guild.getWrapper().defaultPermissions = permsList
 
-                    DefaultPermissions.updateEveryonePermissions(guild, permsList.general, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
+                    DefaultPermissions.updateEveryonePermissions(guild, permsList.general, permsList.tickets, permsList.ticketsManager, permsList.music, permsList.musicAdmin, permsList.moderator, permsList.admin)
                     channel.sendEmbed("Permissions", "Updated permissions for everyone")
 
                     if(invalid.isNotEmpty()) {
@@ -99,6 +99,8 @@ class SetPermissionsCommand: ICommand {
 
         return PermissionList(
                 newValues[PermissionCategory.GENERAL] ?: permissionsList.general,
+                newValues[PermissionCategory.TICKETS] ?: permissionsList.tickets,
+                newValues[PermissionCategory.TICKETS_MANAGER] ?: permissionsList.ticketsManager,
                 newValues[PermissionCategory.MUSIC] ?: permissionsList.music,
                 newValues[PermissionCategory.MUSIC_ADMIN] ?: permissionsList.musicAdmin,
                 newValues[PermissionCategory.MODERATOR] ?: permissionsList.moderator,

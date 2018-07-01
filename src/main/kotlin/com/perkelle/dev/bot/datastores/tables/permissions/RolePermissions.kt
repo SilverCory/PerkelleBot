@@ -14,6 +14,8 @@ object RolePermissions: DataStore {
     private object Store: Table("${getConfig().getTablePrefix()}rolepermissions") {
         val role = long("role").uniqueIndex().primaryKey()
         val general = bool("general")
+        val tickets = bool("tickets").default(false)
+        val ticketsManager = bool("tickets_manager").default(false)
         val music = bool("music")
         val musicAdmin = bool("music_admin")
         val moderator = bool("moderator")
@@ -25,11 +27,13 @@ object RolePermissions: DataStore {
 
     override fun getTable() = instance
 
-    fun updateRolePermissions(role: Role, general: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
+    fun updateRolePermissions(role: Role, general: Boolean, tickets: Boolean, ticketsManager: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
         transaction {
-            Store.upsert(listOf(Store.general, Store.music, Store.musicAdmin, Store.moderator, Store.admin)) {
+            Store.upsert(listOf(Store.general, Store.tickets, Store.ticketsManager, Store.music, Store.musicAdmin, Store.moderator, Store.admin)) {
                 it[Store.role] = role.idLong
                 it[Store.general] = general
+                it[Store.tickets] = tickets
+                it[Store.ticketsManager] = ticketsManager
                 it[Store.music] = music
                 it[Store.musicAdmin] = musicAdmin
                 it[Store.moderator] = moderator
@@ -42,7 +46,7 @@ object RolePermissions: DataStore {
         return transaction {
             Store.select {
                 Store.role eq role.idLong
-            }.map { PermissionList(it[Store.general], it[Store.music], it[Store.musicAdmin], it[Store.moderator], it[Store.admin]) }.firstOrNull()
+            }.map { PermissionList(it[Store.general], it[Store.tickets], it[Store.ticketsManager], it[Store.music], it[Store.musicAdmin], it[Store.moderator], it[Store.admin]) }.firstOrNull()
         }
     }
 }

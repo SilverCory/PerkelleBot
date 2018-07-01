@@ -3,12 +3,10 @@ package com.perkelle.dev.bot.datastores.tables.tickets
 import com.perkelle.dev.bot.command.impl.tickets.Ticket
 import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.getConfig
+import com.perkelle.dev.bot.utils.generateRandomString
 import net.dv8tion.jda.core.entities.Channel
 import net.dv8tion.jda.core.entities.Member
-import org.jetbrains.exposed.sql.AutoIncColumnType
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Tickets : DataStore {
@@ -16,7 +14,7 @@ object Tickets : DataStore {
     private object Store : Table(getConfig().getTablePrefix() + "") {
         val guild = long("guild")
         val channel = long("channel")
-        val id = integer("id").autoIncrement()
+        val id = varchar("id", 6)
         val open = bool("open")
         val owner = long("owner")
     }
@@ -39,27 +37,46 @@ object Tickets : DataStore {
     fun getTicket(channel: Long): Ticket? {
         if(cache.none { it.channel == channel }) populateCache(channel)
 
-        (Store.id as AutoIncColumnType).autoincSeq
         return cache.firstOrNull { it.channel == channel }
     }
 
-    fun createTicket(channel: Channel, owner: Member): Ticket {
-        val id = transaction {
+    fun createTicket(channel: Channel, id: String, owner: Member): Ticket {
+        transaction {
             Store.insert {
                 it[Store.guild] = channel.guild.idLong
                 it[Store.channel] = channel.idLong
+                it[Store.id] = id
                 it[Store.open] = true
                 it[Store.owner] = owner.user.idLong
-            }.generatedKey
+            }
         }
 
-        val ticket = Ticket(channel.guild.idLong, channel.idLong, id!!.toInt(), true, owner.user.idLong)
+        val ticket = Ticket(channel.guild.idLong, channel.idLong, id, true, owner.user.idLong)
         cache.add(ticket)
 
         return ticket
     }
 
-    private fun populateCache(id: Int) {
+    fun generateId(guild: Long): String {
+        var found = false
+        var id = ""
+
+        while(!found) {
+            id = generateRandomString(6)
+
+            val alreadyExists = transaction {
+                Store.select {
+                    (Store.guild eq guild) and (Store.id eq id)
+                }.count() > 0
+            }
+
+            found = !alreadyExists
+        }
+
+        return id
+    }
+
+    private fun populateCache(id: String) {
         val ticket = transaction {
             Store.select {
                 Store.id eq id
