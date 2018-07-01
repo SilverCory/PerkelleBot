@@ -11,10 +11,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object Tickets : DataStore {
 
-    private object Store : Table(getConfig().getTablePrefix() + "") {
+    private object Store : Table(getConfig().getTablePrefix() + "tickets") {
         val guild = long("guild")
         val channel = long("channel")
-        val id = varchar("id", 6)
+        val id = varchar("id", 8)
         val open = bool("open")
         val owner = long("owner")
     }
