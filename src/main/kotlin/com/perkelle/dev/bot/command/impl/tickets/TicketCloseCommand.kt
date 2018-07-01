@@ -47,8 +47,8 @@ class TicketCloseCommand: Executor {
 
                 if(history.isEmpty()) break
                 else {
-                    history.forEach { msg ->
-                        sb.append("[${dateFormat.format(Date(msg.creationTime.toInstant().toEpochMilli()))}][${msg.id}] ${msg.member.effectiveName}: ${msg.contentRaw}")
+                    history.reversed().forEach { msg ->
+                        sb.append("[${dateFormat.format(Date(msg.creationTime.toInstant().toEpochMilli()))}][${msg.id}] ${msg.member.effectiveName}: ${msg.contentRaw}\n")
                     }
                 }
             }
@@ -59,6 +59,7 @@ class TicketCloseCommand: Executor {
             ).queue()
         }
 
+        Tickets.setClosed(channel.idLong)
         channel.delete().reason("Ticket closed by ${sender.effectiveName}").queue()
     }
 }

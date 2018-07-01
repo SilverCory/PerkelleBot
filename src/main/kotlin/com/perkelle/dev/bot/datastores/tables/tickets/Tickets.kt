@@ -76,6 +76,14 @@ object Tickets : DataStore {
         return id
     }
 
+    fun setClosed(channel: Long) {
+        transaction {
+            Store.update({ Store.channel eq channel }) {
+                it[Store.open] = false
+            }
+        }
+    }
+
     private fun populateCache(id: String) {
         val ticket = transaction {
             Store.select {

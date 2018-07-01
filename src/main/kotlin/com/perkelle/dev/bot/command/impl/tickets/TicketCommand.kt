@@ -73,7 +73,7 @@ class TicketCommand: ICommand {
                         .setPremiumOnly(true)
                         .setCategory(CommandCategory.TICKETS)
                         .setPermission(PermissionCategory.ADMIN)
-                        .setExecutor(TicketSetArchiveChannelCommand())
+                        .setExecutor(TicketSetWelcomeMessageCommand())
         )
     }
 }

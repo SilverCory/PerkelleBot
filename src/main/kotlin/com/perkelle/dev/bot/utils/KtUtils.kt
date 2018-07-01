@@ -121,7 +121,7 @@ fun<T> List<T>.without(element: T): List<T> {
 fun generateRandomString(length: Int, charset: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"): String {
     var s = ""
 
-    for(i in 0..length) {
+    for(i in 0 until length) {
         s += charset[ThreadLocalRandom.current().nextInt(0, charset.length)]
     }
 

@@ -43,7 +43,7 @@ class TicketOpenCommand: Executor {
                 EmbedBuilder()
                         .setTitle("Tickets")
                         .setColor(Colors.GREEN.denary)
-                        .addField("Hey, ${sender.asMention}", TicketWelcomeMessages.getMessage(guild.idLong), false)
+                        .addField("Hey, ${sender.effectiveName}", TicketWelcomeMessages.getMessage(guild.idLong), false)
                         .addField("Subject", subject, false)
                         .build()
         ).queue()
@@ -51,7 +51,8 @@ class TicketOpenCommand: Executor {
         channel.sendEmbed("Tickets", "Opened a ticket: ${ticketChannel.asMention}")
 
         TicketManagers.getManagers(guild.idLong).mapNotNull { guild.getMemberById(it) }.with(sender).forEach { member ->
-            channel.createPermissionOverride(member).setAllow(
+            ticketChannel.createPermissionOverride(member).setAllow(
+                    Permission.VIEW_CHANNEL,
                     Permission.MESSAGE_READ,
                     Permission.MESSAGE_WRITE,
                     Permission.MESSAGE_ADD_REACTION,
@@ -60,5 +61,7 @@ class TicketOpenCommand: Executor {
                     Permission.MESSAGE_EMBED_LINKS
             ).queue()
         }
+
+        ticketChannel.createPermissionOverride(guild.publicRole).setDeny(Permission.VIEW_CHANNEL, Permission.MESSAGE_READ).queue()
     }
 }

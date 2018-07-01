@@ -3,8 +3,6 @@ package com.perkelle.dev.bot.datastores.tables.tickets
 import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.datastores.upsert
 import com.perkelle.dev.bot.getConfig
-import com.perkelle.dev.bot.utils.getCommands
-import net.dv8tion.jda.core.entities.Guild
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction

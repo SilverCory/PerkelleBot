@@ -16,7 +16,7 @@ class TicketRemoveManagerCommand: Executor {
 
         val manager = message.mentionedMembers[0]
         if(!TicketManagers.isManager(manager)) {
-            channel.sendEmbed("Tickets", "${manager.asMention} is nt a manager")
+            channel.sendEmbed("Tickets", "${manager.asMention} is not a manager")
             return
         }
 

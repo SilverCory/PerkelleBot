@@ -21,5 +21,6 @@ class TicketSetWelcomeMessageCommand: Executor {
         }
 
         TicketWelcomeMessages.setMessage(guild.idLong, message)
+        channel.sendEmbed("Tickets", "Updated welcome message to `$message`")
     }
 }
