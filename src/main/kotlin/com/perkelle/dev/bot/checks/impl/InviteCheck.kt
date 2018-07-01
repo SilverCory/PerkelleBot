@@ -2,7 +2,7 @@ package com.perkelle.dev.bot.checks.impl
 
 import com.perkelle.dev.bot.checks.Check
 import com.perkelle.dev.bot.checks.MessageContext
-import com.perkelle.dev.bot.datastores.tables.BlockInvites
+import com.perkelle.dev.bot.datastores.tables.checks.BlockInvites
 
 class InviteCheck: Check {
 

@@ -3,7 +3,7 @@ package com.perkelle.dev.bot
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.datastores.RedisBackend
 import com.perkelle.dev.bot.datastores.SQLBackend
-import com.perkelle.dev.bot.datastores.tables.PremiumUsers
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumUsers
 import com.perkelle.dev.bot.listeners.*
 import com.perkelle.dev.bot.utils.getCommands
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager

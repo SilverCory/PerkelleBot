@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.permissions
 
 import com.perkelle.dev.bot.command.PermissionList
 import com.perkelle.dev.bot.datastores.DataStore
@@ -13,11 +13,13 @@ object  DefaultPermissions: DataStore {
 
     private object Store: Table("${getConfig().getTablePrefix()}defaultpermissions") {
         val guild = long("guild").uniqueIndex().primaryKey()
-        val general = Store.bool("general")
-        val music = Store.bool("music")
-        val musicAdmin = Store.bool("music_admin")
-        val moderator = Store.bool("moderator")
-        val admin = Store.bool("admin")
+        val general = bool("general")
+        val tickets = bool("tickets").default(false)
+        val ticketsManager = bool("ticketsManager").default(false)
+        val music = bool("music")
+        val musicAdmin = bool("music_admin")
+        val moderator = bool("moderator")
+        val admin = bool("admin")
     }
 
     override val instance: Table
@@ -28,7 +30,7 @@ object  DefaultPermissions: DataStore {
     fun setDefaultEveryonePermissions(guild: Guild) {
         transaction {
             Store.upsert(listOf(Store.general, Store.music, Store.musicAdmin, Store.moderator, Store.admin)) {
-                it[this.guild] = guild.idLong
+                it[Store.guild] = guild.idLong
                 it[general] = true
                 it[music] = true
                 it[musicAdmin] = false
@@ -46,15 +48,17 @@ object  DefaultPermissions: DataStore {
         }
     }
 
-    fun updateEveryonePermissions(guild: Guild, general: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
+    fun updateEveryonePermissions(guild: Guild, general: Boolean, tickets: Boolean, ticketsManager: Boolean, music: Boolean, musicAdmin: Boolean, moderator: Boolean, admin: Boolean) {
         transaction {
             Store.upsert(listOf(Store.general, Store.music, Store.musicAdmin, Store.moderator, Store.admin)) {
-                it[this.guild] = guild.idLong
-                it[this.general] = general
-                it[this.music] = music
-                it[this.musicAdmin] = musicAdmin
-                it[this.moderator] = moderator
-                it[this.admin] = admin
+                it[Store.guild] = guild.idLong
+                it[Store.general] = general
+                it[Store.tickets] = tickets
+                it[Store.ticketsManager] = ticketsManager
+                it[Store.music] = music
+                it[Store.musicAdmin] = musicAdmin
+                it[Store.moderator] = moderator
+                it[Store.admin] = admin
             }
         }
     }
@@ -63,8 +67,8 @@ object  DefaultPermissions: DataStore {
         return transaction {
             Store.select {
                 Store.guild eq guild
-            }.map { PermissionList(it[Store.general], it[Store.music], it[Store.musicAdmin], it[Store.moderator], it[Store.admin]) }
-                    .firstOrNull() ?: PermissionList(true, true, false, false, false)
+            }.map { PermissionList(it[Store.general], it[Store.tickets], it[Store.ticketsManager], it[Store.music], it[Store.musicAdmin], it[Store.moderator], it[Store.admin]) }
+                    .firstOrNull() ?: PermissionList(true, false, false, true, false, false, false)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.music
 
 import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.datastores.upsert
@@ -7,11 +7,11 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object Prefixes: DataStore {
+object Volume: DataStore {
 
-    private object Store: Table("${getConfig().getTablePrefix()}prefixes") {
+    private object Store: Table("${getConfig().getTablePrefix()}volume") {
         val guild = long("guild").uniqueIndex().primaryKey()
-        val prefix = varchar("prefix", 4)
+        val volume = integer("volume")
     }
 
     override val instance: Table
@@ -19,20 +19,20 @@ object Prefixes: DataStore {
 
     override fun getTable() = instance
 
-    fun setPrefix(guildId: Long, newPrefix: String) {
+    fun setVolume(guildId: Long, volume: Int) {
         transaction {
-            Store.upsert(listOf(Store.prefix)) {
+            Store.upsert(listOf(Store.volume)) {
                 it[guild] = guildId
-                it[prefix] = newPrefix
+                it[Store.volume] = volume
             }
         }
     }
 
-    fun getPrefix(guildId: Long): String? {
+    fun getVolume(guildId: Long): Int {
         return transaction {
             Store.select {
                 Store.guild eq guildId
-            }.map { it[Store.prefix] }.firstOrNull()
+            }.map { it[Store.volume] }.firstOrNull() ?: 100
         }
     }
 }

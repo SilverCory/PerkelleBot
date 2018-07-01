@@ -4,8 +4,8 @@ import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
-import com.perkelle.dev.bot.datastores.tables.PremiumKeys
-import com.perkelle.dev.bot.datastores.tables.PremiumUsers
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumKeys
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumUsers
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
 

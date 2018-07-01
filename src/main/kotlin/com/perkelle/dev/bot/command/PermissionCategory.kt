@@ -1,5 +1,5 @@
 package com.perkelle.dev.bot.command
 
 enum class PermissionCategory {
-    GENERAL, MUSIC, MUSIC_ADMIN, MODERATOR, ADMIN
+    GENERAL, TICKETS, TICKETS_MANAGER, MUSIC, MUSIC_ADMIN, MODERATOR, ADMIN
 }

@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.checks
 
 import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.getConfig

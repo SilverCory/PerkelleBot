@@ -2,7 +2,7 @@ package com.perkelle.dev.bot.command.impl.tags
 
 import com.perkelle.dev.bot.command.CommandContext
 import com.perkelle.dev.bot.command.Executor
-import com.perkelle.dev.bot.datastores.tables.Tags
+import com.perkelle.dev.bot.datastores.tables.tags.Tags
 import com.perkelle.dev.bot.utils.sendEmbed
 
 class TagListCommand: Executor {

@@ -19,7 +19,7 @@ class HelpCommand: ICommand {
                     channel.sendEmbed("Help", "Check your PMs")
 
                     val message = EmbedBuilder()
-                            .setColor(Colors.GREEN)
+                            .setColor(Colors.GREEN.denary)
 
                     CommandCategory.values().forEach { category ->
                         val all = mutableListOf<CommandBuilder>()

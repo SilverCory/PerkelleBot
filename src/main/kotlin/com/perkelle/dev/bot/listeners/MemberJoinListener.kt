@@ -1,7 +1,7 @@
 package com.perkelle.dev.bot.listeners
 
-import com.perkelle.dev.bot.datastores.tables.AutoRole
-import com.perkelle.dev.bot.datastores.tables.WelcomeMessages
+import com.perkelle.dev.bot.datastores.tables.roles.AutoRole
+import com.perkelle.dev.bot.datastores.tables.settings.WelcomeMessages
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent

@@ -15,9 +15,10 @@ import net.dv8tion.jda.core.entities.MessageChannel
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
 
-fun MessageChannel.sendEmbed(title: String, message: String, color: Int = Colors.GREEN, inline: Boolean = false, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
+fun MessageChannel.sendEmbed(title: String, message: String, color: Int, inline: Boolean = false, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
     sendMessage(EmbedBuilder()
             .setColor(color)
             .addField(title, message, inline)
@@ -28,9 +29,11 @@ fun MessageChannel.sendEmbed(title: String, message: String, color: Int = Colors
             }
 }
 
-fun MessageChannel.sendEmbed(message: String, color: Int = Colors.GREEN, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
+fun MessageChannel.sendEmbed(title: String, message: String, color: Colors = Colors.GREEN, inline: Boolean = false, autoDelete: Boolean = true, callback: Callback<Message> = {}) = sendEmbed(title, message, color.denary, inline, autoDelete, callback)
+
+fun MessageChannel.sendEmbed(message: String, color: Colors = Colors.GREEN, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
     sendMessage(EmbedBuilder()
-            .setColor(color)
+            .setColor(color.denary)
             .setDescription(message)
             .build())
             .queue {
@@ -48,12 +51,12 @@ fun Message.deleteAfter(millis: Long = Constants.MESSAGE_DELETE_MILLIS) {
 
 fun MessageChannel.sendPlain(contents: String) = sendMessage(contents).queue { it.deleteAfter() }
 
-object Colors {
-    val GREEN = 2335514
-    val RED = 11010048
-    val ORANGE = 16740864
-    val LIME = 7658240
-    val BLUE = 472219
+enum class Colors(val denary: Int) {
+    GREEN(2335514),
+    RED(11010048),
+    ORANGE(16740864),
+    LIME(7658240),
+    BLUE(472219),
 }
 
 fun<T> Deferred<T>.onComplete(block: (T) -> Unit) = invokeOnCompletion { block(getCompleted()) }
@@ -113,4 +116,14 @@ fun<T> List<T>.without(element: T): List<T> {
     clone.addAll(this)
     if(clone.contains(element)) clone.remove(element)
     return clone
+}
+
+fun generateRandomString(length: Int, charset: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"): String {
+    var s = ""
+
+    for(i in 0 until length) {
+        s += charset[ThreadLocalRandom.current().nextInt(0, charset.length)]
+    }
+
+    return s
 }

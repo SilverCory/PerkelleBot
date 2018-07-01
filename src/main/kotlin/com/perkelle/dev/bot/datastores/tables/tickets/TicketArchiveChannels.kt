@@ -1,4 +1,4 @@
-package com.perkelle.dev.bot.datastores.tables
+package com.perkelle.dev.bot.datastores.tables.tickets
 
 import com.perkelle.dev.bot.datastores.DataStore
 import com.perkelle.dev.bot.datastores.upsert
@@ -8,11 +8,11 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object AutoRole: DataStore {
+object TicketArchiveChannels : DataStore {
 
-    private object Store: Table(getConfig().getTablePrefix() + "autorole") {
+    private object Store : Table(getConfig().getTablePrefix() + "ticketarchives") {
         val guild = long("guild").uniqueIndex()
-        val role = long("role")
+        val channel = long("channel")
     }
 
     override val instance: Table
@@ -20,32 +20,26 @@ object AutoRole: DataStore {
 
     override fun getTable() = instance
 
-    private val cache = mutableMapOf<Long, Long?>() // Guild ID -> Role ID
+    private val cache = mutableMapOf<Long, Long?>()
 
-    fun hasAutoRole(guild: Long): Boolean {
-        if(!cache.containsKey(guild)) populateCache(guild)
-
-        return cache[guild] != null
-    }
-
-    fun getRole(guild: Long): Long? {
+    fun getChannel(guild: Long): Long? {
         if(!cache.containsKey(guild)) populateCache(guild)
 
         return cache[guild]
     }
 
-    fun setRole(guild: Long, role: Long) {
-        cache[guild] = role
+    fun setChannel(guild: Long, channel: Long) {
+        cache[guild] = channel
 
         transaction {
-            Store.upsert(listOf(Store.role)) {
+            Store.upsert(listOf(Store.channel)) {
                 it[Store.guild] = guild
-                it[Store.role] = role
+                it[Store.channel] = channel
             }
         }
     }
 
-    fun disableAutoRoll(guild: Long) {
+    fun disableArchiveChannel(guild: Long) {
         cache[guild] = null
 
         transaction {
@@ -56,12 +50,10 @@ object AutoRole: DataStore {
     }
 
     private fun populateCache(guild: Long) {
-        val role = transaction {
+        cache[guild] = transaction {
             Store.select {
                 Store.guild eq guild
-            }.map { it[Store.role] }.firstOrNull()
+            }.map { it[Store.channel] }.firstOrNull()
         }
-
-        cache[guild] = role
     }
 }

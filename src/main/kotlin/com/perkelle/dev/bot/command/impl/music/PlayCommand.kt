@@ -79,25 +79,26 @@ class PlayCommand: ICommand {
                             channel.sendEmbed("Music", "Queued **${track.info.title}** (`${track.duration.formatMillis()}`)")
                         }
                         else -> channel.sendEmbed("Music", tracks.withIndex().joinToString("\n") { (index, track) -> "`${index + 1}` ${track.info.title} - ${track.info.author} `${track.duration.formatMillis()}`" }) { msg ->
-                            msg.addReaction("\u0031\u20E3").queue()
+                            msg.addReaction("c:443029836978716673").queue()
                             try {
-                                if (tracks.size >= 2) msg.addReaction("\u0032\u20E3").queue()
-                                if (tracks.size >= 3) msg.addReaction("\u0033\u20E3").queue()
-                                if (tracks.size >= 4) msg.addReaction("\u0034\u20E3").queue()
-                                if (tracks.size >= 5) msg.addReaction("\u0035\u20E3").queue()
-                                msg.addReaction("\uD83C\uDDE8").queue()
+                                if (tracks.size >= 2) msg.addReaction("c:443029859296346144").queue()
+                                if (tracks.size >= 3) msg.addReaction("c:443029873464705034").queue()
+                                if (tracks.size >= 4) msg.addReaction("c:443029887138267136").queue()
+                                if (tracks.size >= 5) msg.addReaction("c:443029902556528640").queue()
+                                msg.addReaction("c:443029916993191963").queue()
                             } catch(_: ErrorResponseException) {} //Thrown if the user reacts before all options are displayed (quite a lot of the time)
 
                             addReactCallback(msg.idLong) {
                                 if (it.member != sender) return@addReactCallback
 
-                                val track = when (it.emote.name) {
-                                    "1⃣" -> tracks[0]
-                                    "2⃣" -> tracks[1]
-                                    "3⃣" -> tracks[2]
-                                    "4⃣" -> tracks[3]
-                                    "5⃣" -> tracks[4]
-                                    "\uD83C\uDDE8" -> {
+                                if(it.emote.id == null) return@addReactCallback
+                                val track = when (it.emote.idLong) {
+                                    443029836978716673 -> tracks[0]
+                                    443029859296346144 -> tracks[1]
+                                    443029873464705034 -> tracks[2]
+                                    443029887138267136 -> tracks[3]
+                                    443029902556528640-> tracks[4]
+                                    443029916993191963 -> {
                                         removeCallback(msg.idLong)
                                         msg.delete().queue()
                                         null

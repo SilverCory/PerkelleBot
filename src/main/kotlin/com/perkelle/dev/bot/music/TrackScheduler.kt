@@ -1,6 +1,6 @@
 package com.perkelle.dev.bot.music
 
-import com.perkelle.dev.bot.datastores.tables.Volume
+import com.perkelle.dev.bot.datastores.tables.music.Volume
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.formatMillis
 import com.perkelle.dev.bot.utils.sendEmbed

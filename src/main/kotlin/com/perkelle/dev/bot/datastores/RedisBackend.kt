@@ -1,6 +1,6 @@
 package com.perkelle.dev.bot.datastores
 
-import com.perkelle.dev.bot.datastores.tables.PremiumUsers
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumUsers
 import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.wrappers.redis.*
 import kotlinx.coroutines.experimental.launch

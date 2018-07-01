@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.listeners
 
 import com.perkelle.dev.bot.datastores.RedisBackend
+import com.perkelle.dev.bot.datastores.tables.tickets.TicketManagers
 import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
@@ -20,6 +21,8 @@ class JoinListener: ListenerAdapter() {
                 guild.owner.user.openPrivateChannel().queue { it.sendEmbed("No Permission", "This bot is for premium users only. Type `p!premium` on the main bot for more information", Colors.RED, autoDelete = false) }
                 guild.leave().queue()
             }
+
+            TicketManagers.addManager(guild.idLong, guild.owner.user.idLong)
 
             val shard = e.jda.shardInfo.shardId
             val count = e.jda.guilds.size

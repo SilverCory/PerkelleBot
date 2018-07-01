@@ -1,10 +1,10 @@
 package com.perkelle.dev.bot.managers
 
 import com.perkelle.dev.bot.command.PermissionList
-import com.perkelle.dev.bot.datastores.tables.DefaultPermissions
-import com.perkelle.dev.bot.datastores.tables.Prefixes
-import com.perkelle.dev.bot.datastores.tables.PremiumUsers
-import com.perkelle.dev.bot.datastores.tables.RolePermissions
+import com.perkelle.dev.bot.datastores.tables.permissions.DefaultPermissions
+import com.perkelle.dev.bot.datastores.tables.settings.Prefixes
+import com.perkelle.dev.bot.datastores.tables.premium.PremiumUsers
+import com.perkelle.dev.bot.datastores.tables.permissions.RolePermissions
 import com.perkelle.dev.bot.music.GuildAudioControllerFactory
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA

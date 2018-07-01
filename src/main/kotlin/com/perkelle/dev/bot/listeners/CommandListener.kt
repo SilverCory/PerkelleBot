@@ -4,7 +4,7 @@ import com.perkelle.dev.bot.Constants
 import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandContext
 import com.perkelle.dev.bot.command.hasPermission
-import com.perkelle.dev.bot.datastores.tables.BlacklistedMembers
+import com.perkelle.dev.bot.datastores.tables.settings.BlacklistedMembers
 import com.perkelle.dev.bot.getConfig
 import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors

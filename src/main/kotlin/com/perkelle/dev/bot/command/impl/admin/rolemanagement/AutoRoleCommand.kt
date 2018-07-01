@@ -4,7 +4,7 @@ import com.perkelle.dev.bot.command.CommandBuilder
 import com.perkelle.dev.bot.command.CommandCategory
 import com.perkelle.dev.bot.command.ICommand
 import com.perkelle.dev.bot.command.PermissionCategory
-import com.perkelle.dev.bot.datastores.tables.AutoRole
+import com.perkelle.dev.bot.datastores.tables.roles.AutoRole
 import com.perkelle.dev.bot.utils.Colors.RED
 import com.perkelle.dev.bot.utils.sendEmbed
 import net.dv8tion.jda.core.Permission
