@@ -18,12 +18,19 @@ class SetPermissionsCommand: ICommand {
                 .setPermission(PermissionCategory.ADMIN)
                 .setCategory(CommandCategory.SETTINGS)
                 .setExecutor {
-                    if(message.mentionedRoles.isEmpty() || !args[0].startsWith("<@&", true) || args.size < 2) {
-                        channel.sendEmbed("Permissions", "You need to specify permissions. Refer to <https://bot.perkelle.com/permissions.php> for help using this command.", Colors.RED)
+                    if(args.isEmpty()) {
+                        channel.sendEmbed("Permissions", "You need to specify a role name", Colors.RED)
                         return@setExecutor
                     }
 
-                    val role = message.mentionedRoles[0]
+                    val roleName = args[0]
+                    val role = guild.roles.firstOrNull { it.name.equals(roleName, true) }
+
+                    if(role == null) {
+                        channel.sendEmbed("Permissions", "Invalid role", Colors.RED)
+                        return@setExecutor
+                    }
+
                     val default = DefaultPermissions.getEveryonePermissions(guild.idLong)
                     val rolePerms = RolePermissions.getRolePermissions(role)
 
