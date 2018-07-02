@@ -22,6 +22,8 @@ object TicketManagers: DataStore {
     private val cache = mutableMapOf<Long, List<Long>>()
 
     fun isManager(member: Member): Boolean {
+        if(member.isOwner) return true
+
         if(!cache.containsKey(member.guild.idLong)) populateCache(member.guild.idLong)
 
         return cache[member.guild.idLong]!!.contains(member.user.idLong)

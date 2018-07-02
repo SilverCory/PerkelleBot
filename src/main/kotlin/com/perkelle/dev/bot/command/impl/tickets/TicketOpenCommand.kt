@@ -50,7 +50,7 @@ class TicketOpenCommand: Executor {
 
         channel.sendEmbed("Tickets", "Opened a ticket: ${ticketChannel.asMention}")
 
-        TicketManagers.getManagers(guild.idLong).mapNotNull { guild.getMemberById(it) }.with(sender).forEach { member ->
+        TicketManagers.getManagers(guild.idLong).mapNotNull { guild.getMemberById(it) }.with(sender).with(guild.selfMember).forEach { member ->
             ticketChannel.createPermissionOverride(member).setAllow(
                     Permission.VIEW_CHANNEL,
                     Permission.MESSAGE_READ,
