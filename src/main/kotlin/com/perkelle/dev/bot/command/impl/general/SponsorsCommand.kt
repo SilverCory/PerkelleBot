@@ -14,7 +14,7 @@ class SponsorsCommand: ICommand {
         CommandBuilder()
                 .setName("sponsors")
                 .setDescription("Shows you the list of people that who have helped to make the bot possible")
-                .setAliases("partners")
+                .setAliases("partners", "sponsor", "partner")
                 .setCategory(CommandCategory.GENERAL)
                 .setPermission(PermissionCategory.GENERAL)
                 .setExecutor {
