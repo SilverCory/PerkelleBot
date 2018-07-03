@@ -1,6 +1,8 @@
 package com.perkelle.dev.bot.logging
 
 import com.perkelle.dev.bot.datastores.tables.settings.ModLogChannels
+import com.perkelle.dev.bot.getBot
+import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.*
@@ -9,6 +11,10 @@ fun logPurge(mod: Member, channel: TextChannel, amount: Int) {
     ModLog.log(channel.guild, EmbedBuilder()
             .setTitle("Purge")
             .setColor(Colors.LIME.denary)
+            .setImage(lazy {
+                if(channel.guild.getWrapper().isPremium()) channel.guild.iconUrl
+                else getBot().pictureURL
+            }.value)
             .addField("Moderator", mod.asMention, true)
             .addField("Channel", channel.asMention, true)
             .addField("Messages", amount.toString(), true)
@@ -23,6 +29,10 @@ fun log(type: EventType, mod: Member, target: User, reason: String) {
                 EventType.SOFTBAN -> Colors.ORANGE
                 else -> Colors.RED
             }.denary)
+            .setImage(lazy {
+                if(mod.guild.getWrapper().isPremium()) mod.guild.iconUrl
+                else getBot().pictureURL
+            }.value)
             .addField("Moderator", mod.asMention, true)
             .addField("Target", target.asMention, true)
             .addField("Reason", reason, true)

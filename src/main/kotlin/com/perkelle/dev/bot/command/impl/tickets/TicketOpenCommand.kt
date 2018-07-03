@@ -6,7 +6,9 @@ import com.perkelle.dev.bot.datastores.tables.tickets.TicketChannelCategories
 import com.perkelle.dev.bot.datastores.tables.tickets.TicketManagers
 import com.perkelle.dev.bot.datastores.tables.tickets.TicketWelcomeMessages
 import com.perkelle.dev.bot.datastores.tables.tickets.Tickets
+import com.perkelle.dev.bot.getBot
 import com.perkelle.dev.bot.getConfig
+import com.perkelle.dev.bot.managers.getWrapper
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
 import com.perkelle.dev.bot.utils.with
@@ -53,6 +55,10 @@ class TicketOpenCommand: Executor {
                 EmbedBuilder()
                         .setTitle("Tickets")
                         .setColor(Colors.GREEN.denary)
+                        .setImage(lazy {
+                            if(guild.getWrapper().isPremium()) guild.iconUrl
+                            else getBot().pictureURL
+                        }.value)
                         .addField("Hey, ${sender.effectiveName}", TicketWelcomeMessages.getMessage(guild.idLong), false)
                         .addField("Subject", subject, false)
                         .build()

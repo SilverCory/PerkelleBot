@@ -37,7 +37,7 @@ class TicketCloseCommand: Executor {
             val archiveChannel = guild.getTextChannelById(it) ?: return@let
             val ticketChannel = channel as MessageChannel
 
-            channel.sendEmbed("Tickets", "Archiving ticket...")
+            channel.sendEmbed("Tickets", "Processing...")
 
             val sb = StringBuilder()
 
@@ -54,7 +54,7 @@ class TicketCloseCommand: Executor {
             }
 
             archiveChannel.sendFile(sb.toString().byteInputStream(), "${ticketChannel.name}.txt", MessageBuilder()
-                    .setContent("Archive of `#${ticketChannel.name}` (closed by ${sender.asMention})")
+                    .setContent("Archive of `#${ticketChannel.name}` (closed by ${sender.effectiveName}#${sender.user.discriminator})")
                     .build()
             ).queue()
         }

@@ -2,6 +2,8 @@ package com.perkelle.dev.bot.utils
 
 import com.perkelle.dev.bot.Constants
 import com.perkelle.dev.bot.datastores.tables.settings.AutoDeleteMessages
+import com.perkelle.dev.bot.getBot
+import com.perkelle.dev.bot.managers.getWrapper
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput
@@ -13,6 +15,7 @@ import kotlinx.coroutines.experimental.runBlocking
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageChannel
+import net.dv8tion.jda.core.entities.TextChannel
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -22,6 +25,10 @@ import java.util.concurrent.TimeUnit
 fun MessageChannel.sendEmbed(title: String, message: String, color: Int, inline: Boolean = false, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
     sendMessage(EmbedBuilder()
             .setColor(color)
+            .setImage(lazy {
+                if((this as TextChannel).guild.getWrapper().isPremium()) this.guild.iconUrl
+                else getBot().pictureURL
+            }.value)
             .addField(title, message, inline)
             .build())
             .queue {
@@ -36,6 +43,10 @@ fun MessageChannel.sendEmbed(message: String, color: Colors = Colors.GREEN, auto
     sendMessage(EmbedBuilder()
             .setColor(color.denary)
             .setDescription(message)
+            .setImage(lazy {
+                if((this as TextChannel).guild.getWrapper().isPremium()) this.guild.iconUrl
+                else getBot().pictureURL
+            }.value)
             .build())
             .queue {
                 callback(it)

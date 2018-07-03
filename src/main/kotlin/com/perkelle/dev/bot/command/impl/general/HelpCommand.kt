@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.command.impl.general
 
 import com.perkelle.dev.bot.command.*
+import com.perkelle.dev.bot.getBot
 import com.perkelle.dev.bot.listeners.CommandListener
 import com.perkelle.dev.bot.utils.Colors
 import com.perkelle.dev.bot.utils.sendEmbed
@@ -19,7 +20,7 @@ class HelpCommand: ICommand {
                     channel.sendEmbed("Help", "Check your PMs")
 
                     val message = EmbedBuilder()
-                            .setColor(Colors.GREEN.denary)
+                            .setColor(Colors.GREEN.denary).setImage(getBot().pictureURL)
 
                     CommandCategory.values().forEach { category ->
                         val all = mutableListOf<CommandBuilder>()
