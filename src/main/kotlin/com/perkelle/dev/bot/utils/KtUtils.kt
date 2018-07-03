@@ -1,6 +1,7 @@
 package com.perkelle.dev.bot.utils
 
 import com.perkelle.dev.bot.Constants
+import com.perkelle.dev.bot.datastores.tables.settings.AutoDeleteMessages
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput
@@ -44,8 +45,10 @@ fun MessageChannel.sendEmbed(message: String, color: Colors = Colors.GREEN, auto
 
 fun Message.deleteAfter(millis: Long = Constants.MESSAGE_DELETE_MILLIS) {
     launch {
-        delay(millis)
-        delete().queue()
+        if(AutoDeleteMessages.isAutoDelete(guild.idLong)) {
+            delay(millis)
+            delete().queue()
+        }
     }
 }
 

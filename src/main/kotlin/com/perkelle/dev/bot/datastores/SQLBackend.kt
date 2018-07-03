@@ -60,6 +60,7 @@ class SQLBackend {
             transaction {
                 SchemaUtils.createMissingTablesAndColumns(
                         *listOf(
+                                AutoDeleteMessages,
                                 AutoRole,
                                 BlacklistedMembers,
                                 BlockInvites,
