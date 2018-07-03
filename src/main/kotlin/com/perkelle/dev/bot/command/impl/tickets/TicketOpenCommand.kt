@@ -16,6 +16,16 @@ import net.dv8tion.jda.core.entities.TextChannel
 
 class TicketOpenCommand: Executor {
 
+    private val channelPerms = listOf(
+            Permission.VIEW_CHANNEL,
+            Permission.MESSAGE_READ,
+            Permission.MESSAGE_WRITE,
+            Permission.MESSAGE_ADD_REACTION,
+            Permission.MESSAGE_ATTACH_FILES,
+            Permission.MESSAGE_HISTORY,
+            Permission.MESSAGE_EMBED_LINKS
+    )
+
     override fun CommandContext.onExecute() {
         val subject =
                 if(args.isEmpty()) "No subject given"
@@ -50,18 +60,17 @@ class TicketOpenCommand: Executor {
 
         channel.sendEmbed("Tickets", "Opened a ticket: ${ticketChannel.asMention}")
 
-        TicketManagers.getManagers(guild.idLong).mapNotNull { guild.getMemberById(it) }.with(sender).with(guild.selfMember).forEach { member ->
-            ticketChannel.createPermissionOverride(member).setAllow(
-                    Permission.VIEW_CHANNEL,
-                    Permission.MESSAGE_READ,
-                    Permission.MESSAGE_WRITE,
-                    Permission.MESSAGE_ADD_REACTION,
-                    Permission.MESSAGE_ATTACH_FILES,
-                    Permission.MESSAGE_HISTORY,
-                    Permission.MESSAGE_EMBED_LINKS
-            ).queue()
-        }
-
         ticketChannel.createPermissionOverride(guild.publicRole).setDeny(Permission.VIEW_CHANNEL, Permission.MESSAGE_READ).queue()
+
+        TicketManagers.getManagers(guild.idLong).mapNotNull { guild.getMemberById(it) }.with(sender).with(guild.selfMember).forEach { member ->
+            val memberPerms = mutableListOf(*channelPerms.toTypedArray())
+            val override = ticketChannel.getPermissionOverride(member)
+
+            override?.allowed?.forEach {
+                if(!memberPerms.contains(it)) memberPerms.add(it)
+            }
+
+            ticketChannel.putPermissionOverride(member).setAllow(memberPerms).queue()
+        }
     }
 }

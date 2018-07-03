@@ -24,7 +24,7 @@ class SetPermissionsCommand: ICommand {
                     }
 
                     val roleName = args[0]
-                    val role = guild.roles.firstOrNull { it.name.equals(roleName, true) }
+                    val role = guild.roles.firstOrNull { it.name.equals(roleName, true) || it.id == roleName }
 
                     if(role == null) {
                         channel.sendEmbed("Permissions", "Invalid role", Colors.RED)

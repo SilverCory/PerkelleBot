@@ -11,7 +11,7 @@ class TicketCommand: ICommand {
         val cmdBuilder = CommandBuilder()
                 .setName("tickets")
                 .setDescription("General tickets command")
-                .setAliases("ticket", "t")
+                .setAliases("ticket", "t", "new", "open", "close")
                 .setPremiumOnly(true)
                 .setCategory(CommandCategory.TICKETS)
                 .setPermission(PermissionCategory.TICKETS)
