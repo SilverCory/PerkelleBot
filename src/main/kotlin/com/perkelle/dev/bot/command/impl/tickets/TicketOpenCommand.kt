@@ -60,7 +60,7 @@ class TicketOpenCommand: Executor {
 
         channel.sendEmbed("Tickets", "Opened a ticket: ${ticketChannel.asMention}")
 
-        ticketChannel.createPermissionOverride(guild.publicRole).setDeny(Permission.VIEW_CHANNEL, Permission.MESSAGE_READ).queue()
+        ticketChannel.putPermissionOverride(guild.publicRole).setDeny(Permission.VIEW_CHANNEL, Permission.MESSAGE_READ).queue()
 
         TicketManagers.getManagers(guild.idLong).mapNotNull { guild.getMemberById(it) }.with(sender).with(guild.selfMember).forEach { member ->
             val memberPerms = mutableListOf(*channelPerms.toTypedArray())
