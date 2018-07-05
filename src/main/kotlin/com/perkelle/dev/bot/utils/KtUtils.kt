@@ -44,7 +44,7 @@ fun MessageChannel.sendEmbed(message: String, color: Colors = Colors.GREEN, auto
             .setColor(color.denary)
             .setDescription(message)
             .setThumbnail(lazy {
-                if((this as TextChannel).guild.getWrapper().isPremium()) this.guild.iconUrl
+                if(this is TextChannel && this.guild.getWrapper().isPremium()) this.guild.iconUrl
                 else getBot().pictureURL
             }.value)
             .build())
