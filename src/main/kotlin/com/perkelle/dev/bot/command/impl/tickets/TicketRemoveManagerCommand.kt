@@ -20,7 +20,7 @@ class TicketRemoveManagerCommand: Executor {
             return
         }
 
-        TicketManagers.removeManager(guild.idLong, user.idLong)
+        TicketManagers.removeManager(guild.idLong, manager.user.idLong)
         channel.sendEmbed("Tickets", "Removed ${manager.asMention} from the manager role")
     }
 }

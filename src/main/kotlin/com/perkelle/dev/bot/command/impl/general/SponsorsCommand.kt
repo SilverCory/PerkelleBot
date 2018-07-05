@@ -22,11 +22,8 @@ class SponsorsCommand: ICommand {
                 .setExecutor {
                     channel.sendMessage(
                             EmbedBuilder()
-                                    .setColor(Colors.GREEN.denary).setImage(lazy {
-                                        if(guild.getWrapper().isPremium()) guild.iconUrl
-                                        else getBot().pictureURL
-                                    }.value)
-                                    .setImage(lazy {
+                                    .setColor(Colors.GREEN.denary)
+                                    .setThumbnail(lazy {
                                         if(guild.getWrapper().isPremium()) guild.iconUrl
                                         else getBot().pictureURL
                                     }.value)

@@ -11,7 +11,7 @@ fun logPurge(mod: Member, channel: TextChannel, amount: Int) {
     ModLog.log(channel.guild, EmbedBuilder()
             .setTitle("Purge")
             .setColor(Colors.LIME.denary)
-            .setImage(lazy {
+            .setThumbnail(lazy {
                 if(channel.guild.getWrapper().isPremium()) channel.guild.iconUrl
                 else getBot().pictureURL
             }.value)
@@ -29,7 +29,7 @@ fun log(type: EventType, mod: Member, target: User, reason: String) {
                 EventType.SOFTBAN -> Colors.ORANGE
                 else -> Colors.RED
             }.denary)
-            .setImage(lazy {
+            .setThumbnail(lazy {
                 if(mod.guild.getWrapper().isPremium()) mod.guild.iconUrl
                 else getBot().pictureURL
             }.value)

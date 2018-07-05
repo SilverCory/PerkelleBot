@@ -20,7 +20,7 @@ class TicketAddManagerCommand: Executor {
             return
         }
 
-        TicketManagers.addManager(guild.idLong, user.idLong)
+        TicketManagers.addManager(guild.idLong, manager.user.idLong)
         channel.sendEmbed("Tickets", "Added ${manager.asMention} as a manager")
     }
 }

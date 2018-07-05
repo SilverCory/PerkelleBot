@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 fun MessageChannel.sendEmbed(title: String, message: String, color: Int, inline: Boolean = false, autoDelete: Boolean = true, callback: Callback<Message> = {}) {
     sendMessage(EmbedBuilder()
             .setColor(color)
-            .setImage(lazy {
+            .setThumbnail(lazy {
                 if((this as TextChannel).guild.getWrapper().isPremium()) this.guild.iconUrl
                 else getBot().pictureURL
             }.value)
@@ -43,7 +43,7 @@ fun MessageChannel.sendEmbed(message: String, color: Colors = Colors.GREEN, auto
     sendMessage(EmbedBuilder()
             .setColor(color.denary)
             .setDescription(message)
-            .setImage(lazy {
+            .setThumbnail(lazy {
                 if((this as TextChannel).guild.getWrapper().isPremium()) this.guild.iconUrl
                 else getBot().pictureURL
             }.value)

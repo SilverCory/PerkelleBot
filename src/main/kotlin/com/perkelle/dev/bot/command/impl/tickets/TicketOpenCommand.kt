@@ -55,7 +55,7 @@ class TicketOpenCommand: Executor {
                 EmbedBuilder()
                         .setTitle("Tickets")
                         .setColor(Colors.GREEN.denary)
-                        .setImage(lazy {
+                        .setThumbnail(lazy {
                             if(guild.getWrapper().isPremium()) guild.iconUrl
                             else getBot().pictureURL
                         }.value)

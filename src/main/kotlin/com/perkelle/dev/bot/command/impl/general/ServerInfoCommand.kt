@@ -20,7 +20,8 @@ class ServerInfoCommand: ICommand {
                 .setExecutor {
                     channel.sendMessage(EmbedBuilder()
                             .setTitle("Info")
-                            .setColor(4359924).setImage(lazy {
+                            .setColor(4359924)
+                            .setThumbnail(lazy {
                                 if(guild.getWrapper().isPremium()) guild.iconUrl
                                 else getBot().pictureURL
                             }.value)
