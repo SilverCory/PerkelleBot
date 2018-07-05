@@ -41,6 +41,8 @@ object TicketManagers: DataStore {
         cache[guild] = cache[guild]!!.with(manager)
 
         transaction {
+            logger.addLogger(StdOutSqlLogger)
+
             Store.insert {
                 it[Store.guild] = guild
                 it[Store.manager] = manager
@@ -62,6 +64,7 @@ object TicketManagers: DataStore {
 
     private fun populateCache(guild: Long) {
         val managers = transaction {
+            logger.addLogger(StdOutSqlLogger)
             Store.select {
                 Store.guild eq guild
             }.map { it[Store.manager] }
