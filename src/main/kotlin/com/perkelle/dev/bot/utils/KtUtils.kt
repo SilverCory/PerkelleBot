@@ -26,7 +26,7 @@ fun MessageChannel.sendEmbed(title: String, message: String, color: Int, inline:
     sendMessage(EmbedBuilder()
             .setColor(color)
             .setThumbnail(lazy {
-                if((this as TextChannel).guild.getWrapper().isPremium()) this.guild.iconUrl
+                if(this is TextChannel && this.guild.getWrapper().isPremium()) this.guild.iconUrl
                 else getBot().pictureURL
             }.value)
             .addField(title, message, inline)
