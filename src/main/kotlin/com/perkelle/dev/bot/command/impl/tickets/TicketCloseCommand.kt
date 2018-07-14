@@ -48,7 +48,7 @@ class TicketCloseCommand: Executor {
                 if(history.isEmpty()) break
                 else {
                     history.reversed().forEach { msg ->
-                        sb.append("[${dateFormat.format(Date(msg.creationTime.toInstant().toEpochMilli()))}][${msg.id}] ${msg.member.effectiveName}: ${msg.contentRaw}\n")
+                        sb.append("[${dateFormat.format(Date(msg.creationTime.toInstant().toEpochMilli()))}][${msg.id}] ${msg.author.name}: ${msg.contentRaw}\n")
                     }
                 }
             }
